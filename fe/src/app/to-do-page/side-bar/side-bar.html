@@ -1,18 +1,18 @@
 <main class="main">
     <div class="content-container">
         <div class="search-container">
-            <input type="text" [(ngModel)]="searchStr" (input)="onChangeSearchStr($event.target.value)" class="search-input" placeholder="Search">
+            <input type="text" [(ngModel)]="searchStr" (input)="onChangeSearchStr($event.target.value)" class="search-input" placeholder="Search by title">
         </div>
         <div class="filter-container">
             <div class="txtFilter">Status</div>
             <hr/>
             <div class="filter-options">
                 <label class="filter-item">
-                    <input type="checkbox" name="filterGroup" value="Pending"> 
+                    <input type="checkbox" (change)="onChangeStatus($event, 'Pending')" name="filterGroup" value="Pending"> 
                     Pending
                 </label>
                 <label class="filter-item">
-                    <input type="checkbox" name="filterGroup" value="Done"> 
+                    <input type="checkbox" (change)="onChangeStatus($event, 'Done')" name="filterGroup" value="Done"> 
                     Done
                 </label>
             </div>
@@ -23,15 +23,15 @@
             <div class="filter-pr-options">
                 
                 <label class="filter-pr-item">
-                    <input type="checkbox" name="filterGroup" value="High"> 
+                    <input type="checkbox"  (change)="onChangePriority($event, 'High')"    name="filterGroup" value="High"> 
                     High
                 </label>
                 <label class="filter-pr-item">
-                    <input type="checkbox" name="filterGroup" value="Medium"> 
+                    <input type="checkbox"  (change)="onChangePriority($event, 'Medium')" name="filterGroup" value="Medium"> 
                     Medium
                 </label>
                 <label class="filter-pr-item">
-                    <input type="checkbox" name="filterGroup" value="Cao"> 
+                    <input type="checkbox"  (change)="onChangePriority($event, 'Low')" name="filterGroup" value="Low"> 
                     Low
                 </label>
             </div>

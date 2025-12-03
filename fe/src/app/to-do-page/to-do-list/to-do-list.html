@@ -1,17 +1,35 @@
 <main class="main">
-    
-    <div class = 'tasks-list-container'>
-        <h2 style="padding-left: 40px;">To Do List</h2>
-        <ul class="tasks-list">
-            <li class='task'>
-            Add New Task
-            </li>
-        </ul>
-        <ul class="tasks-list">
-            <li *ngFor="let t of tasks" class='task'>
-            Mô tả: {{ t.title }}<br />
-            Trạng thái: {{ t.status }}<br />
-            Ưu tiên: {{ t.priority }}<br />
+    <div class="tasks-list-container">
+        <div class="head-container">
+
+            <div class="head-top">
+                <h2>To Do List</h2>
+
+                <div class="sort-container">
+                    <label for="sortSelect">Sort by:</label>
+                    <select id="sortSelect" (change)="onChangeSort($event)">
+
+                        <option value="">None</option>
+                        <option value="title-asc">Title ↑</option>
+                        <option value="title-desc">Title ↓</option>
+                        <option value="priority-asc">Priority ↑</option>
+                        <option value="priority-desc">Priority ↓</option>
+                    </select>
+                </div>
+            </div>
+
+            <ul class="tasks-list" style="padding: 10px 0px;">
+                <li class="task">
+                    Add New Task
+                </li>
+            </ul>
+        </div>
+
+        <ul class="tasks-list tasks-list-scroll">
+            <li *ngFor="let t of tasks" class="task">
+                Mô tả: {{ t.title }}<br />
+                Trạng thái: {{ t.status }}<br />
+                Ưu tiên: {{ t.priority }}<br />
             </li>
         </ul>
     </div>

@@ -43,18 +43,17 @@ export class TaskService {
     const taskList = this.load().filter(t => t.taskId !== currentTaskId);
     localStorage.setItem(STORAGE_TASK,JSON.stringify(taskList));
   }
-  searchAndFilter(searchString?: string, statusFilter?: string,prorityFilter?: string): Task[] {
+  searchAndFilter(searchString?: string, statusFilter?: string[],prorityFilter?: string[]): Task[] {
         let taskList = this.load();
         if (searchString) {
             const lowerCaseSearchTerm = searchString.toLowerCase().trim();
             taskList = taskList.filter(task => task.title.toLowerCase().includes(lowerCaseSearchTerm));
         }
-          if (statusFilter !== undefined && statusFilter !== null && statusFilter!='') 
-              taskList = taskList.filter(task => task.status === statusFilter);
+          if (statusFilter !== undefined && statusFilter !== null && statusFilter.length!=0) 
+              taskList = taskList.filter(task => statusFilter.includes(task.status));
         
-
-        if (prorityFilter !== undefined && prorityFilter !== null && prorityFilter!='') 
-            taskList = taskList.filter(task => task.priority === prorityFilter);
+        if (prorityFilter !== undefined && prorityFilter !== null && prorityFilter.length!=0) 
+            taskList = taskList.filter(task => prorityFilter.includes(task.priority));
         
         return taskList;
     }

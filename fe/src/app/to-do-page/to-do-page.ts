@@ -11,7 +11,7 @@ import { SideBar } from "./side-bar/side-bar";
   
 })
 export class ToDoPage {
-  curFilter = {searchStr:'',statusFilter:'',priorityFilter:''};
+  curFilter = {searchStr:'',statusFilter:[],priorityFilter:[]};
   onChangeFilter(value: any) {
     this.curFilter = value;
   }
