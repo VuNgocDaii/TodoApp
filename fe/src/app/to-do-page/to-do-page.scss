@@ -1,0 +1,20 @@
+.main {
+    display: flex;
+     height: 100%;
+     font-family: 'Roboto', sans-serif;
+
+}
+.side-bar{
+    width: 15%;
+}
+.content{
+    width: 60%;
+     overflow-y: auto;
+     scrollbar-width: none;
+}
+
+:host {
+  display: block;
+  height: 100vh;       
+}
+

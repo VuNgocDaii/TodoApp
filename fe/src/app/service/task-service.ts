@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Task, TaskPriority, TaskStatus} from '../model/task.model';
+import {Task} from '../model/task.model';
 const STORAGE_TASK = 'key_task';
 const STORAGE_ID = 'key_id';
 @Injectable({
@@ -23,7 +23,7 @@ export class TaskService {
       return [];
     }
   }
-  add(newTitle: string, newDescription: string, newStatus: TaskStatus, newPriority: TaskPriority, newCreateAt: string, newUpdateAt: string) {
+  add(newTitle: string, newDescription: string, newStatus: string, newPriority: string, newCreateAt: string, newUpdateAt: string) {
     const newTaskId = this.genNewId();
     const taskList = this.load();
     const newTask : Task = {
@@ -33,7 +33,8 @@ export class TaskService {
         status : newStatus,
         priority : newPriority,
         createAt : new Date().toISOString(),
-        updateAt : new Date().toISOString()
+        updateAt : new Date().toISOString(),
+        isDeleted : false
     };
     taskList.push(newTask);
     localStorage.setItem(STORAGE_TASK,JSON.stringify(taskList));
@@ -42,4 +43,53 @@ export class TaskService {
     const taskList = this.load().filter(t => t.taskId !== currentTaskId);
     localStorage.setItem(STORAGE_TASK,JSON.stringify(taskList));
   }
+  searchAndFilter(searchString?: string, statusFilter?: string,prorityFilter?: string): Task[] {
+        let taskList = this.load();
+        if (searchString) {
+            const lowerCaseSearchTerm = searchString.toLowerCase().trim();
+            taskList = taskList.filter(task => task.title.toLowerCase().includes(lowerCaseSearchTerm));
+        }
+          if (statusFilter !== undefined && statusFilter !== null && statusFilter!='') 
+              taskList = taskList.filter(task => task.status === statusFilter);
+        
+
+        if (prorityFilter !== undefined && prorityFilter !== null && prorityFilter!='') 
+            taskList = taskList.filter(task => task.priority === prorityFilter);
+        
+        return taskList;
+    }
+    update(updatedTask: Task): void {
+        let taskList = this.load();
+        const index = taskList.findIndex(t => t.taskId === updatedTask.taskId);
+
+        if (index>-1) {
+            updatedTask.updateAt = new Date().toISOString();
+            taskList[index] = updatedTask;
+            localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
+        } 
+    }
+
+    markDone(currentTaskId: number): void {
+        let taskList = this.load();
+        const task = taskList.find(t => t.taskId === currentTaskId);
+
+        if (task) {
+            task.status = 'Done';
+            task.updateAt = new Date().toISOString();
+            
+            localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
+        }
+    }
+
+    unmarkDone(currentTaskId: number): void {
+        let taskList = this.load();
+        const task = taskList.find(t => t.taskId === currentTaskId);
+
+        if (task) {
+            task.status = 'Pending';
+            task.updateAt = new Date().toISOString();
+            
+            localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
+        } 
+    }
 }

@@ -1,0 +1,5 @@
+<!-- <h1>lmao</h1> -->
+<main class="main">
+    <app-side-bar (filterChange)="onChangeFilter($event)" class="side-bar" ></app-side-bar>
+    <app-to-do-list [filter]="curFilter" class="content"></app-to-do-list>
+</main>

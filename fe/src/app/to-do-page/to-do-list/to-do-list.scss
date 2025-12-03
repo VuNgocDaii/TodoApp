@@ -1,0 +1,25 @@
+.main{
+    display: flex;
+    justify-content: right;
+}
+.tasks-list-container  {
+    width: 100%;
+    border-radius: 1px;    
+}
+
+.task {
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  list-style-type: none;
+}
+
+.task:hover {
+  border-color: #4c8bf5;
+  background: #f3f8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+

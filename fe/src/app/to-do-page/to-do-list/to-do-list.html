@@ -1,0 +1,18 @@
+<main class="main">
+    
+    <div class = 'tasks-list-container'>
+        <h2 style="padding-left: 40px;">To Do List</h2>
+        <ul class="tasks-list">
+            <li class='task'>
+            Add New Task
+            </li>
+        </ul>
+        <ul class="tasks-list">
+            <li *ngFor="let t of tasks" class='task'>
+            Mô tả: {{ t.title }}<br />
+            Trạng thái: {{ t.status }}<br />
+            Ưu tiên: {{ t.priority }}<br />
+            </li>
+        </ul>
+    </div>
+</main>
