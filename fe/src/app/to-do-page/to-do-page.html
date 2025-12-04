@@ -1,5 +1,8 @@
 <!-- <h1>lmao</h1> -->
 <main class="main">
     <app-side-bar (filterChange)="onChangeFilter($event)" class="side-bar" ></app-side-bar>
-    <app-to-do-list [filter]="curFilter" class="content"></app-to-do-list>
+    <app-to-do-list [filter]="curFilter" (taskChange)="onChangeTask($event)" class="content"></app-to-do-list>
+    @if (curTask){
+    <app-to-do-up-del-form class="form" (closeForm)="onCloseForm($event)" [task]="curTask"></app-to-do-up-del-form>
+    }
 </main>

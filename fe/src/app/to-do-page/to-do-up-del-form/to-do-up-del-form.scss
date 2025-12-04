@@ -1,0 +1,112 @@
+.task-form {
+  height: 100%;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+  padding: 20px 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.task-form-body {
+  flex: 1 1 auto;
+}
+.field {
+  margin-bottom: 14px;
+}
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 6px;
+}
+.task-form input[type="text"], .task-form select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  background: #f9fafb;
+}
+.task-form input[type="text"]:focus, .task-form select:focus {
+  border-color: #facc15; 
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
+}
+.readonly-field {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 13px;
+  color: #4b5563;
+}
+.task-form-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #f3f4f6;
+}
+.task-form-footer .btn-delete, .task-form-footer .btn-save {
+  flex: 1 1 0;
+  padding: 10px 0;
+  border-radius: 999px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.task-form-footer .btn-delete {
+  background: #f3f4f6;
+  color: #111827;
+}
+.task-form-footer .btn-delete:hover {
+  background: #e5e7eb;
+}
+.task-form-footer .btn-save {
+  background: #facc15;
+  color: #1f2933;
+}
+.task-form-footer .btn-save:hover {
+  background: #eab308;
+}
+.task-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.task-form-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.btn-close-form {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-close-form:hover {
+  background: #e5e7eb;
+  color: #111827;
+}

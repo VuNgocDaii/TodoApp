@@ -1,0 +1,60 @@
+<div class="task-form">
+  <div class="task-form-header">
+    <span class="task-form-title">Task details</span>
+    <button
+      type="button"
+      class="btn-close-form"
+      (click)="onCloseClick()"
+    >
+      ×
+    </button>
+  </div>
+
+  <div class="task-form-body">
+    <div class="field">
+      <label>Task:</label>
+      <input type="text" class="txt-title" [value]="task?.title || ''" />
+    </div>
+
+    <div class="field">
+      <label>Description:</label>
+      <input type="text" class="txt-description" [value]="task?.description || ''" />
+    </div>
+
+    <div class="field">
+      <label>Status:</label>
+      <select class="txt-status">
+        <option value="pending" [selected]="task?.status === 'pending'">Pending</option>
+        <option value="done" [selected]="task?.status === 'done'">Done</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Priority:</label>
+      <select class="txt-priority">
+        <option value="low" [selected]="task?.priority === 'low'">Low</option>
+        <option value="medium" [selected]="task?.priority === 'medium'">Medium</option>
+        <option value="high" [selected]="task?.priority === 'high'">High</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Create at:</label>
+      <div class="readonly-field">
+        {{ task?.createAt | date:'dd/MM/yyyy HH:mm' }}
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Last Update At:</label>
+      <div class="readonly-field">
+        {{ task?.updateAt | date:'dd/MM/yyyy HH:mm' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="task-form-footer">
+    <button type="button" class="btn-delete">Delete Task</button>
+    <button type="button" class="btn-save">Save changes</button>
+  </div>
+</div>

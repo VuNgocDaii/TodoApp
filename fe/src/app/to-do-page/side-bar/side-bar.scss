@@ -1,72 +1,78 @@
-.main {
-  
-  }
+
 .content-container {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    background: #F4F4F4;
-    border-radius: 8px;
+  width: 100%;
+  height: 100vh;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+  padding: 20px 18px;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .search-container {
-    margin-top: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px; 
-    padding: 8px 12px; 
-    width: 80%;
-    height: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); 
-    background-color: #fff; 
+  width: 100%;
 }
 
 .search-input {
-    flex-grow: 1;
-    border: none;
-    outline: none; 
-    font-size: 16px;
-    font-family: inherit; 
-    color: #333;
+  width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 14px;
+  outline: none;
 }
 
-.search-input::placeholder {
-    color: #a0a0a0;
-    opacity: 1; 
-}
-.filter-container {
-    width: 85%;
-    
-}
-.txtFilter {
-    margin: 20px 0px;
-    display: block;
-    text-align: left;
-}
-.filter-options{
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-}
-.filter-item {
-    width: 100%;
+.search-input:focus {
+  border-color: #facc15;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
 }
 
+.filter-container,
 .filter-pr-container {
-    width: 85%;
-    
+  width: 100%;
 }
+
+.txtFilter,
 .txtPrFilter {
-    margin: 20px 0px;
-    display: block;
-    text-align: left;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
 }
-.filter-pr-options{
-    display: flex;
-    width: 100%;
-    flex-direction: column;
+
+hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 8px 0 12px;
 }
+
+.filter-options,
+.filter-pr-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-item,
 .filter-pr-item {
-    width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #374151;
+}
+
+.filter-item input[type="checkbox"],
+.filter-pr-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #facc15; 
+  cursor: pointer;
 }

@@ -1,6 +1,7 @@
 <main class="main">
+<div class="main-content-container">
     <div class="tasks-list-container">
-        <div class="head-container">
+        <div class="head-container" style="margin:10px 0px;">
 
             <div class="head-top">
                 <h2>To Do List</h2>
@@ -18,19 +19,52 @@
                 </div>
             </div>
 
-            <ul class="tasks-list" style="padding: 10px 0px;">
+            <!-- <ul class="tasks-list" style="padding: 10px 0px;">
                 <li class="task">
                     Add New Task
                 </li>
-            </ul>
+            </ul> -->
         </div>
 
         <ul class="tasks-list tasks-list-scroll">
             <li *ngFor="let t of tasks" class="task">
-                Mô tả: {{ t.title }}<br />
-                Trạng thái: {{ t.status }}<br />
-                Ưu tiên: {{ t.priority }}<br />
+                <label class="task-card">
+
+            
+                <input type="checkbox"
+                        class="task-checkbox"
+                        [checked]="t.status === 'Done'"
+                        (change)="toggleStatus(t)" />
+
+                <div class="task-content">
+                    <div class="task-title">{{ t.title }}</div>
+
+                    <div class="task-sub">
+                    Status:
+                    <span [ngClass]="{ 
+                        'status-done': t.status === 'Done',
+                        'status-pending': t.status === 'Pending'
+                    }">
+                        {{ t.status }}
+                    </span>
+
+                    · Priority:
+                    <span class="priority-pill"
+                        [ngClass]="{
+                            'priority-high': t.priority === 'High',
+                            'priority-medium': t.priority === 'Medium',
+                            'priority-low': t.priority === 'Low'
+                        }">
+                        {{ t.priority }}
+                    </span>
+                    </div>
+                </div>
+
+                <button class="task-chevron" (click)="emitChoosenTask(t)">›</button>
+                </label>
             </li>
         </ul>
     </div>
+
+</div>
 </main>
