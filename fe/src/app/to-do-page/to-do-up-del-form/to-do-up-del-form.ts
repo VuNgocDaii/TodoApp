@@ -3,6 +3,7 @@ import { Task } from '../../model/task.model';
 import { DatePipe, NgIf } from '@angular/common';
 import { TaskService } from '../../service/task-service';
 import { Router } from '@angular/router'
+import { log } from 'console';
 @Component({
   selector: 'app-to-do-up-del-form',
   imports: [DatePipe],
@@ -20,6 +21,7 @@ export class ToDoUpDelForm {
     priority:'',
     isDeleted:false
   };
+  @Input() checkReload:number=0;
   curUrl: string = '';
   @Input() formTitle : string = '';
   @Output() closeForm = new EventEmitter<void>();
@@ -30,6 +32,14 @@ export class ToDoUpDelForm {
   onCloseClick() {
     this.closeForm.emit();
   }
+  ngOnChanges(){
+     if (this.checkReload>0) {
+      this.task = this.taskService.loadTask(this.task.taskId);
+       this.checkReload = 0;
+     }
+    console.log('abc');
+  }
+  
   @Output() reloadList = new EventEmitter<void>();
   updateTask(titleInput: string,descInput:string,statusSelect: string, prioritySelect:string) {
     const curTask: Task ={
@@ -44,6 +54,7 @@ export class ToDoUpDelForm {
     } ;
     console.log(curTask.title);
     this.taskService.update(curTask);
+    this.task = this.taskService.loadTask(this.task.taskId);
     this.reloadList.emit();
   }
   deleteTask(curTask?: Task) {

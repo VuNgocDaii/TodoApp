@@ -119,10 +119,13 @@ export class ToDoList implements OnInit, OnChanges {
       console.log('out lan 1'); 
     }
   }
+  @Output() reloadForm = new EventEmitter<any>();
   toggleStatus(task: any) {
     task.status = task.status === 'Done' ? 'Pending' : 'Done';
     if (task.status==='Done') this.taskService.markDone(task.taskId);
     if (task.status==='Pending') this.taskService.unmarkDone(task.taskId);
+    
+    this.reloadForm.emit();
   }
   emitChoosenTask(value? :Task) {
     // console.log(value.taskId);

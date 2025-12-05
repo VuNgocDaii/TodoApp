@@ -7,6 +7,7 @@
     (taskChange)="onChangeTask($event)" 
     [callReload]="checkChange"
     (formTitleChange)="onChangeForm($event)"
+    (reloadForm)="onReloadForm()"
     class="content">
     </app-to-do-list>
 
@@ -22,6 +23,7 @@
     [formTitle]="curFormTitle"
     (closeForm)="onCloseForm($event)"
     [task]="curTask"
+    [checkReload]="checkChange"
      (reloadList)="onReloadList()"
      ></app-to-do-up-del-form>
     }

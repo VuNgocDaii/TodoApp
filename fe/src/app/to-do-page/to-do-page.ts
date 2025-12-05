@@ -15,6 +15,7 @@ import { NgIf } from "../../../node_modules/@angular/common/types/_common_module
 })
 export class ToDoPage {
   curFilter = {searchStr:'',statusFilter:[],priorityFilter:[]};
+  
   onChangeFilter(value: any) {
     this.curFilter = value;
     console.log(this.curFilter.searchStr);
@@ -33,10 +34,13 @@ export class ToDoPage {
   }
   checkChange: number = 0;
   onReloadList() {
-    console.log("????");
+    // console.log("????");
      this.checkChange+=1;
   }
-
+  onReloadForm() {
+     this.checkChange+=1;
+    //  console.log(this.checkChange+'a');
+  }
   curFormTitle: string = '';
   onChangeForm(value: any){
     this.curFormTitle = value;

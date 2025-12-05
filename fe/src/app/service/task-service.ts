@@ -27,6 +27,11 @@ export class TaskService {
       return [];
     }
   }
+  loadTask(currentTaskId: number): any {
+        let taskList = this.loadFull();
+        const task = taskList.find(t => t.taskId === currentTaskId);
+        return task;
+      }
   loadFull() : Task[] {
     const json = localStorage.getItem(STORAGE_TASK);
     if (!json) return [];
@@ -105,6 +110,7 @@ export class TaskService {
             task.updateAt = new Date().toISOString();
             
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
+            this.update(task);
         }
     }
 
@@ -117,6 +123,7 @@ export class TaskService {
             task.updateAt = new Date().toISOString();
             
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
+            this.update(task);
         } 
     }
      restore(currentTaskId?: number) {
@@ -130,6 +137,5 @@ export class TaskService {
             for (let task of taskList)
            console.log(task.taskId);
         } 
-    
   }
 }
