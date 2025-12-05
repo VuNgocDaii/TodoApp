@@ -1,7 +1,8 @@
 import { Component , Input, Output, EventEmitter} from '@angular/core';
 import { Task } from '../../model/task.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { TaskService } from '../../service/task-service';
+import { Router } from '@angular/router'
 @Component({
   selector: 'app-to-do-up-del-form',
   imports: [DatePipe],
@@ -19,9 +20,13 @@ export class ToDoUpDelForm {
     priority:'',
     isDeleted:false
   };
+  curUrl: string = '';
   @Input() formTitle : string = '';
   @Output() closeForm = new EventEmitter<void>();
-  constructor(private taskService: TaskService) { }
+  constructor(private taskService: TaskService, private router:Router) { }
+  ngOnInit(){
+    this.curUrl = this.router.url;
+  }
   onCloseClick() {
     this.closeForm.emit();
   }
@@ -48,6 +53,10 @@ export class ToDoUpDelForm {
   }
   addNewTask(newTitle: string,newDescription: string, newStatus: string, newPriority:string){
     this.taskService.add(newTitle, newDescription, newStatus,newPriority);
+    this.reloadList.emit();
+  }
+  restoreTask(curTask? : Task){
+    this.taskService.restore(curTask?.taskId);
     this.reloadList.emit();
   }
 }

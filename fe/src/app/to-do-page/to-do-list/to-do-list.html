@@ -3,7 +3,8 @@
     <div class="tasks-list-container">
         <div class="head-container" style="margin:10px 0px;">
             <div class="head-top">
-  <h2>To Do List</h2>
+     @if (curUrl === '/') {<h2>To Do List</h2>}
+  @else {<h2>Deleted Tasks List</h2>}
 
     <div class="head-actions">
         <div class="sort-container">
@@ -19,10 +20,11 @@
             <option value="priority-desc">Priority ↓</option>
         </select>
         </div>
-
-        <button class="btn-add-task" (click)="emitNewFormTitle('Add New Task')">
-        + Add New Task
-        </button>
+        @if (curUrl==='/'){
+            <button class="btn-add-task" (click)="emitNewFormTitle('Add New Task')">
+            + Add New Task
+            </button>
+        }
     </div>
     </div>
 

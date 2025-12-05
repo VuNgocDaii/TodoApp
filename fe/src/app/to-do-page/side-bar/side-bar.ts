@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import {Router} from '@angular/router'
+import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-side-bar',
   standalone: true,
@@ -12,7 +13,12 @@ export class SideBar {
   @Output() filterChange = new EventEmitter<any>();
   @ViewChild('statusGroup', { static: false }) statusGroup!: ElementRef<HTMLDivElement>;
   @ViewChild('priorityGroup', { static: false }) priorityGroup!: ElementRef<HTMLDivElement>;
-
+  constructor(private router:Router) {}
+  curUrl: string = '';
+  ngOnInit(){
+    this.curUrl = this.router.url;
+    console.log(this.curUrl);
+  }
   searchStr: string = '';
   statusFilter: string[] = [];
   priorityFilter: string[] = [];
@@ -54,34 +60,24 @@ export class SideBar {
 
   toggleAllStatus(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-
     if (!this.statusGroup) return;
-
-    const items = this.statusGroup
-      .nativeElement
-      .querySelectorAll<HTMLInputElement>('input.status-item');
-
-    items.forEach(cb => {
-      if (cb.checked !== checked) {
-        cb.checked = checked;
-        cb.dispatchEvent(new Event('change', { bubbles: true }));
+    const items = this.statusGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.status-item');
+    items.forEach(c => {
+      if (c.checked !== checked) {
+        c.checked = checked;
+        c.dispatchEvent(new Event('change', { bubbles: true}));
       }
     });
   }
 
   toggleAllPriority(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-
     if (!this.priorityGroup) return;
-
-    const items = this.priorityGroup
-      .nativeElement
-      .querySelectorAll<HTMLInputElement>('input.priority-item');
-
-    items.forEach(cb => {
-      if (cb.checked !== checked) {
-        cb.checked = checked;
-        cb.dispatchEvent(new Event('change', { bubbles: true }));
+    const items = this.priorityGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.priority-item');
+    items.forEach(c => {
+      if (c.checked !== checked) {
+        c.checked = checked;
+        c.dispatchEvent(new Event('change', { bubbles: true}));
       }
     });
   }

@@ -1,5 +1,10 @@
 <main class="main">
   <div class="content-container">
+    <a href="http://localhost:4200/" 
+      style="text-align: center;text-decoration: none;color: black;font-size: 25px;">
+      🏠︎ Home Page
+    </a>
+  
     <div class="search-container">
       <input type="text"
              [(ngModel)]="searchStr"
@@ -73,5 +78,8 @@
         </label>
       </div>
     </div>
+    @if (curUrl === '/'){
+    <a href="http://localhost:4200/deletedTasksPage" class="btn-deleted-tasks">🗑 Deleted Tasks</a>
+    }
   </div>
 </main>

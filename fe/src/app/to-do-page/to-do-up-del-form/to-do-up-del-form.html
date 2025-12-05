@@ -10,96 +10,113 @@
     </button>
   </div>
 
-  <div class="task-form-body">
-    <div class="field">
-      <label>Task:</label>
-      <input
-        #titleInput
-        type="text"
-        class="txt-title"
-        [value]="task.title || ''"
-      />
-    </div>
-
-    <div class="field">
-      <label>Description:</label>
-      <input
-        #descriptionInput
-        type="text"
-        class="txt-description"
-        [value]="task.description || ''"
-      />
-    </div>
-
-    <div class="field">
-      <label>Status:</label>
-      <select
-        #statusSelect
-        class="txt-status"
-      >
-        <option value="Pending" [selected]="task.status === 'Pending'">
-          Pending
-        </option>
-        <option value="Done" [selected]="task.status === 'Done'">
-          Done
-        </option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>Priority:</label>
-      <select
-        #prioritySelect
-        class="txt-priority"
-      >
-        <option value="Low" [selected]="task.priority === 'Low'">Low</option>
-        <option value="Medium" [selected]="task.priority === 'Medium'">
-          Medium
-        </option>
-        <option value="High" [selected]="task.priority === 'High'">High</option>
-      </select>
-    </div>
-    @if (formTitle === 'Task Detail'){
-    <div class="field">
-      <label>Create at:</label>
-      <div class="readonly-field">
-        {{ task.createAt | date:'dd/MM/yyyy HH:mm' }}
+    <div class="task-form-body">
+      <div class="field">
+        <label>Task:</label>
+        <input
+          #titleInput
+          type="text"
+          class="txt-title"
+          [value]="task.title || ''"
+        />
       </div>
+
+      <div class="field">
+        <label>Description:</label>
+        <input
+          #descriptionInput
+          type="text"
+          class="txt-description"
+          [value]="task.description || ''"
+        />
+      </div>
+
+      <div class="field">
+        <label>Status:</label>
+        <select
+          #statusSelect
+          class="txt-status"
+        >
+          <option value="Pending" [selected]="task.status === 'Pending'">
+            Pending
+          </option>
+          <option value="Done" [selected]="task.status === 'Done'">
+            Done
+          </option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Priority:</label>
+        <select
+          #prioritySelect
+          class="txt-priority"
+        >
+          <option value="Low" [selected]="task.priority === 'Low'">Low</option>
+          <option value="Medium" [selected]="task.priority === 'Medium'">
+            Medium
+          </option>
+          <option value="High" [selected]="task.priority === 'High'">High</option>
+        </select>
+      </div>
+    
+
+      @if (formTitle === 'Task Detail'){
+      <div class="field">
+        <label>Create at:</label>
+        <div class="readonly-field">
+          {{ task.createAt | date:'dd/MM/yyyy HH:mm' }}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Last Update At:</label>
+        <div class="readonly-field">
+          {{ task.updateAt | date:'dd/MM/yyyy HH:mm' }}
+        </div>
+      </div>}
     </div>
 
-    <div class="field">
-      <label>Last Update At:</label>
-      <div class="readonly-field">
-        {{ task.updateAt | date:'dd/MM/yyyy HH:mm' }}
-      </div>
-    </div>}
-  </div>
   @if (formTitle === 'Task Detail'){
-  <div class="task-form-footer">
-    <button
-      type="button"
-      (click)="deleteTask(task)"
-      (click)="onCloseClick()"
-      class="btn-delete"
-    >
-      Delete Task
-    </button>
+    @if (curUrl === '/'){
+      <div class="task-form-footer">
+        <button
+          type="button"
+          (click)="deleteTask(task)"
+          (click)="onCloseClick()"
+          class="btn-delete"
+        >
+          Delete Task
+        </button>
 
+        <button
+          type="button"
+          (click)="updateTask(
+            titleInput.value,
+            descriptionInput.value,
+            statusSelect.value,
+            prioritySelect.value
+          )"
+          (click)="onCloseClick()"
+          class="btn-save"
+        >
+          Save changes
+        </button>
+      </div>
+    }
+    @if (curUrl === '/deletedTasksPage') {
+      <div class="task-form-footer">
     <button
       type="button"
-      (click)="updateTask(
-        titleInput.value,
-        descriptionInput.value,
-        statusSelect.value,
-        prioritySelect.value
-      )"
       (click)="onCloseClick()"
+      (click)="restoreTask(task)"
       class="btn-save"
     >
-      Save changes
+      Restore
     </button>
-  </div>
-}
+    </div>
+    }
+  }
   @else {
      <div class="task-form-footer">
     <button

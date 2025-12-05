@@ -14,12 +14,12 @@ export class TaskService {
     localStorage.setItem(STORAGE_ID,String(newId+1));
     return newId;
   }
-  load() : Task[] {
+  load(type: boolean) : Task[] {
     const json = localStorage.getItem(STORAGE_TASK);
     if (!json) return [];
     try {
       let tasks = JSON.parse(json) as Task[];
-      tasks = tasks.filter(task => task.isDeleted===false);
+      tasks = tasks.filter(task => task.isDeleted===type);
       // for (let task of tasks)
       //   console.log(task.taskId);
       return tasks;
@@ -69,8 +69,10 @@ export class TaskService {
         } 
     
   }
-  searchAndFilter(searchString?: string, statusFilter?: string[],prorityFilter?: string[]): Task[] {
-        let taskList = this.loadFull();
+  searchAndFilter(curUrl?:string,searchString?: string, statusFilter?: string[],prorityFilter?: string[]): Task[] {
+        let taskList ;
+          if (curUrl==='/deletedTasksPage') taskList = this.load(true);
+        else taskList = this.load(false);
         if (searchString) {
             const lowerCaseSearchTerm = searchString.toLowerCase().trim();
             taskList = taskList.filter(task => task.title.toLowerCase().includes(lowerCaseSearchTerm));
