@@ -4,6 +4,7 @@ import { RouterOutlet } from "../../../node_modules/@angular/router/types/_route
 import { SideBar } from "./side-bar/side-bar";
 import { Task } from '../model/task.model';
 import { ToDoUpDelForm } from "./to-do-up-del-form/to-do-up-del-form";
+import { NgIf } from "../../../node_modules/@angular/common/types/_common_module-chunk";
 
 @Component({
   selector: 'app-to-do-page',
@@ -27,6 +28,17 @@ export class ToDoPage {
 
   onCloseForm(value: any) {
     this.curTask = value;
+    this.curFormTitle='';
     console.log(this.curTask?.title);
+  }
+  checkChange: number = 0;
+  onReloadList() {
+    console.log("????");
+     this.checkChange+=1;
+  }
+
+  curFormTitle: string = '';
+  onChangeForm(value: any){
+    this.curFormTitle = value;
   }
 }

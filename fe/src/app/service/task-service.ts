@@ -18,14 +18,31 @@ export class TaskService {
     const json = localStorage.getItem(STORAGE_TASK);
     if (!json) return [];
     try {
-      return JSON.parse(json) as Task[];
+      let tasks = JSON.parse(json) as Task[];
+      tasks = tasks.filter(task => task.isDeleted===false);
+      // for (let task of tasks)
+      //   console.log(task.taskId);
+      return tasks;
     } catch {
       return [];
     }
   }
-  add(newTitle: string, newDescription: string, newStatus: string, newPriority: string, newCreateAt: string, newUpdateAt: string) {
+  loadFull() : Task[] {
+    const json = localStorage.getItem(STORAGE_TASK);
+    if (!json) return [];
+    try {
+      let tasks = JSON.parse(json) as Task[];
+      // tasks = tasks.filter(task => task.isDeleted===false);
+      // for (let task of tasks)
+      //   console.log(task.taskId);
+      return tasks;
+    } catch {
+      return [];
+    }
+  }
+  add(newTitle: string, newDescription: string, newStatus: string, newPriority: string) {
     const newTaskId = this.genNewId();
-    const taskList = this.load();
+    const taskList = this.loadFull();
     const newTask : Task = {
         taskId : newTaskId,
         title : newTitle,
@@ -39,12 +56,21 @@ export class TaskService {
     taskList.push(newTask);
     localStorage.setItem(STORAGE_TASK,JSON.stringify(taskList));
   }
-  delete(currentTaskId: number) {
-    const taskList = this.load().filter(t => t.taskId !== currentTaskId);
-    localStorage.setItem(STORAGE_TASK,JSON.stringify(taskList));
+  delete(currentTaskId?: number) {
+        let taskList = this.loadFull();
+        for (let task of taskList)
+        console.log(task.taskId);
+        const index = taskList.findIndex(t => t.taskId === currentTaskId);
+        if (index>-1) {
+            taskList[index].isDeleted = true;
+            localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
+            for (let task of taskList)
+           console.log(task.taskId);
+        } 
+    
   }
   searchAndFilter(searchString?: string, statusFilter?: string[],prorityFilter?: string[]): Task[] {
-        let taskList = this.load();
+        let taskList = this.loadFull();
         if (searchString) {
             const lowerCaseSearchTerm = searchString.toLowerCase().trim();
             taskList = taskList.filter(task => task.title.toLowerCase().includes(lowerCaseSearchTerm));
@@ -58,7 +84,7 @@ export class TaskService {
         return taskList;
     }
     update(updatedTask: Task): void {
-        let taskList = this.load();
+        let taskList = this.loadFull();
         const index = taskList.findIndex(t => t.taskId === updatedTask.taskId);
 
         if (index>-1) {
@@ -69,7 +95,7 @@ export class TaskService {
     }
 
     markDone(currentTaskId: number): void {
-        let taskList = this.load();
+        let taskList = this.loadFull();
         const task = taskList.find(t => t.taskId === currentTaskId);
 
         if (task) {
@@ -81,7 +107,7 @@ export class TaskService {
     }
 
     unmarkDone(currentTaskId: number): void {
-        let taskList = this.load();
+        let taskList = this.loadFull();
         const task = taskList.find(t => t.taskId === currentTaskId);
 
         if (task) {
@@ -91,4 +117,17 @@ export class TaskService {
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
         } 
     }
+     restore(currentTaskId?: number) {
+        let taskList = this.loadFull();
+        for (let task of taskList)
+        console.log(task.taskId);
+        const index = taskList.findIndex(t => t.taskId === currentTaskId);
+        if (index>-1) {
+            taskList[index].isDeleted = false;
+            localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
+            for (let task of taskList)
+           console.log(task.taskId);
+        } 
+    
+  }
 }

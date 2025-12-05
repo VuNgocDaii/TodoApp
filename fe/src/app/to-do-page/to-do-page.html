@@ -1,8 +1,28 @@
 <!-- <h1>lmao</h1> -->
 <main class="main">
     <app-side-bar (filterChange)="onChangeFilter($event)" class="side-bar" ></app-side-bar>
-    <app-to-do-list [filter]="curFilter" (taskChange)="onChangeTask($event)" class="content"></app-to-do-list>
-    @if (curTask){
-    <app-to-do-up-del-form class="form" (closeForm)="onCloseForm($event)" [task]="curTask"></app-to-do-up-del-form>
+    
+    <app-to-do-list 
+    [filter]="curFilter" 
+    (taskChange)="onChangeTask($event)" 
+    [callReload]="checkChange"
+    (formTitleChange)="onChangeForm($event)"
+    class="content">
+    </app-to-do-list>
+
+    @if (curFormTitle==='Add New Task'){
+    <app-to-do-up-del-form class="form" 
+    [formTitle]="curFormTitle"
+    (closeForm)="onCloseForm($event)"
+     (reloadList)="onReloadList()"
+     ></app-to-do-up-del-form>
+    }
+    @if (curFormTitle==='Task Detail' && curTask){
+    <app-to-do-up-del-form class="form" 
+    [formTitle]="curFormTitle"
+    (closeForm)="onCloseForm($event)"
+    [task]="curTask"
+     (reloadList)="onReloadList()"
+     ></app-to-do-up-del-form>
     }
 </main>

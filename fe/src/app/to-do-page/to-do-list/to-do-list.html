@@ -2,22 +2,30 @@
 <div class="main-content-container">
     <div class="tasks-list-container">
         <div class="head-container" style="margin:10px 0px;">
-
             <div class="head-top">
-                <h2>To Do List</h2>
+  <h2>To Do List</h2>
 
-                <div class="sort-container">
-                    <label for="sortSelect">Sort by:</label>
-                    <select id="sortSelect" (change)="onChangeSort($event)">
+    <div class="head-actions">
+        <div class="sort-container">
+        <label for="sortSelect">Sort by:</label>
+        <select id="sortSelect" (change)="onChangeSortTitle($event,(0))">
+            <option value="none">None</option>
+            <option value="title-asc">Title ↑</option>
+            <option value="title-desc">Title ↓</option>
+        </select>
+         <select id="sortSelect" (change)="onChangeSortPrio($event,(0))">
+            <option value="none">None</option>
+            <option value="priority-asc">Priority ↑</option>
+            <option value="priority-desc">Priority ↓</option>
+        </select>
+        </div>
 
-                        <option value="">None</option>
-                        <option value="title-asc">Title ↑</option>
-                        <option value="title-desc">Title ↓</option>
-                        <option value="priority-asc">Priority ↑</option>
-                        <option value="priority-desc">Priority ↓</option>
-                    </select>
-                </div>
-            </div>
+        <button class="btn-add-task" (click)="emitNewFormTitle('Add New Task')">
+        + Add New Task
+        </button>
+    </div>
+    </div>
+
 
             <!-- <ul class="tasks-list" style="padding: 10px 0px;">
                 <li class="task">
@@ -60,7 +68,7 @@
                     </div>
                 </div>
 
-                <button class="task-chevron" (click)="emitChoosenTask(t)">›</button>
+                <button class="task-chevron" (click)="emitChoosenTask(t)" (click)="emitNewFormTitle('Task Detail')">></button>
                 </label>
             </li>
         </ul>
