@@ -40,12 +40,12 @@
             <li *ngFor="let t of tasks" class="task">
                 <label class="task-card">
 
-            
+             @if (curUrl==='/'){
                 <input type="checkbox"
                         class="task-checkbox"
                         [checked]="t.status === 'Done'"
                         (change)="toggleStatus(t)" />
-
+                }
                 <div class="task-content">
                     <div class="task-title">{{ t.title }}</div>
 

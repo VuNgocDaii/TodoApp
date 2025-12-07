@@ -1,12 +1,12 @@
 import { Component , Input, Output, EventEmitter} from '@angular/core';
 import { Task } from '../../model/task.model';
-import { DatePipe, NgIf } from '@angular/common';
+import { CommonModule, DatePipe, NgIf } from '@angular/common';
 import { TaskService } from '../../service/task-service';
 import { Router } from '@angular/router'
 import { log } from 'console';
 @Component({
   selector: 'app-to-do-up-del-form',
-  imports: [DatePipe],
+  imports: [DatePipe, CommonModule],
   templateUrl: './to-do-up-del-form.html',
   styleUrl: './to-do-up-del-form.scss',
 })
@@ -42,6 +42,8 @@ export class ToDoUpDelForm {
   
   @Output() reloadList = new EventEmitter<void>();
   updateTask(titleInput: string,descInput:string,statusSelect: string, prioritySelect:string) {
+    titleInput = titleInput.trim();
+    descInput = descInput.trim();
     const curTask: Task ={
       taskId: this.task.taskId,
       title: titleInput,
@@ -52,17 +54,31 @@ export class ToDoUpDelForm {
       updateAt: new Date().toISOString(),
       isDeleted: this.task.isDeleted
     } ;
+    
+    console.log(titleInput);
+    if (titleInput === '') {
+      this.isWarningmOpen=true;
+      return;
+    }
     console.log(curTask.title);
     this.taskService.update(curTask);
     this.task = this.taskService.loadTask(this.task.taskId);
     this.reloadList.emit();
   }
+  isWarningmOpen = false;
   deleteTask(curTask?: Task) {
     this.taskService.delete(curTask?.taskId);
     // console.log(curTask?.isDeleted+"xoa");
     this.reloadList.emit();
   }
   addNewTask(newTitle: string,newDescription: string, newStatus: string, newPriority:string){
+    newTitle = newTitle.trim();
+    newDescription = newDescription.trim();
+    console.log(newTitle);
+    if (newTitle === '') {
+      this.isWarningmOpen=true;
+      return;
+    }
     this.taskService.add(newTitle, newDescription, newStatus,newPriority);
     this.reloadList.emit();
   }
@@ -70,4 +86,27 @@ export class ToDoUpDelForm {
     this.taskService.restore(curTask?.taskId);
     this.reloadList.emit();
   }
+
+  isConfirmOpen = false;
+  confirmMode: string = '';
+
+  openConfirm(mode: 'delete' | 'restore') {
+    this.confirmMode = mode;
+    this.isConfirmOpen = true;
+    console.log(mode);
+  }
+
+  confirmDelete() {
+    this.deleteTask(this.task);
+    this.isConfirmOpen = false;
+    this.onCloseClick();
+  }
+
+  confirmRestore() {
+    this.restoreTask(this.task);
+    this.isConfirmOpen = false;
+    this.onCloseClick();
+  }
+
+
 }

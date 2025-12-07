@@ -20,7 +20,10 @@
 
         <label class="filter-item">
           <input type="checkbox"
+                class="status-all-item"
+                value = "All"
                  (change)="toggleAllStatus($event)">
+                 
           All
         </label>
 
@@ -28,6 +31,7 @@
           <input type="checkbox"
                  class="status-item"
                  (change)="onChangeStatus($event, 'Pending')"
+                 (change)="toggleAllOfStatus($event)"
                  value="Pending">
           Pending
         </label>
@@ -36,6 +40,7 @@
           <input type="checkbox"
                  class="status-item"
                  (change)="onChangeStatus($event, 'Done')"
+                 (change)="toggleAllOfStatus($event)"
                  value="Done">
           Done
         </label>
@@ -49,7 +54,11 @@
 
         <label class="filter-pr-item">
           <input type="checkbox"
-                 (change)="toggleAllPriority($event)">
+                 (change)="toggleAllPriority($event)"
+                 class="priority-all-item"
+                 value="All"
+                 >
+                 
           All
         </label>
 
@@ -57,6 +66,7 @@
           <input type="checkbox"
                  class="priority-item"
                  (change)="onChangePriority($event, 'High')"
+                 (change)="toggleAllOfPrio($event)"
                  value="High">
           High
         </label>
@@ -65,6 +75,7 @@
           <input type="checkbox"
                  class="priority-item"
                  (change)="onChangePriority($event, 'Medium')"
+                 (change)="toggleAllOfPrio($event)"
                  value="Medium">
           Medium
         </label>
@@ -73,6 +84,7 @@
           <input type="checkbox"
                  class="priority-item"
                  (change)="onChangePriority($event, 'Low')"
+                 (change)="toggleAllOfPrio($event)"
                  value="Low">
           Low
         </label>

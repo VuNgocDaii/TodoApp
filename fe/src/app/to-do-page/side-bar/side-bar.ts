@@ -81,4 +81,40 @@ export class SideBar {
       }
     });
   }
+
+  toggleAllOfPrio(event: Event) {
+    let count: number=0;
+    const items = this.priorityGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.priority-item');
+    const allPrio = this.priorityGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.priority-all-item');
+    items.forEach(c => {
+      if (c.checked === true) {
+        count++;
+      }
+    });
+    console.log(count);
+    allPrio.forEach(c => {
+      if (c.value === 'All') {
+        if (count === 3) c.checked = true;
+        else c.checked = false;
+      }
+    });
+  }
+
+  toggleAllOfStatus(event: Event) {
+    let count: number=0;
+    const items = this.statusGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.status-item');
+    const allStatusBtn = this.statusGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.status-all-item');
+    items.forEach(c => {
+      if (c.checked === true) {
+        count++;
+      }
+    });
+    console.log(count);
+    allStatusBtn.forEach(c => {
+      if (c.value === 'All') {
+        if (count === 2) c.checked = true;
+        else c.checked = false;
+      }
+    });
+  }
 }
