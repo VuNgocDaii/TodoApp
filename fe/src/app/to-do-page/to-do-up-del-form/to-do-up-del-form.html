@@ -63,11 +63,13 @@
 
   @else {
   <div class="task-form-body">
-    <div class="field">
+    <div class="field" style="margin-bottom: 0px;">
       <label>Task:</label>
-      <input #titleInput type="text" class="txt-title" [value]="task.title || ''" />
+      <input #titleInput type="text" class="txt-title"
+       [value]="task.title || ''" />
     </div>
-
+    <div style="font-size: 10px;color: red;margin-bottom: 10px;" *ngIf="inputState==='empty'">Task title can not be empty</div>
+    <div style="font-size: 10px;color: red;margin-bottom: 10px;" *ngIf="inputState==='only-space'">Task title can not be just space</div>
     <div class="field">
       <label>Description:</label>
       <input #descriptionInput type="text" class="txt-description" [value]="task.description || ''" />
@@ -168,12 +170,12 @@
 
 <div class="warning-overlay" *ngIf="isWarningmOpen">
   <div class="confirm-box">
-    <p *ngIf="warningMode === 'title-blank-notrim'">
+    <!-- <p *ngIf="warningMode === 'title-blank-notrim'">
       Task title can not be empty!!!
     </p>
     <p *ngIf="warningMode === 'title-blank-trim'">
       Task title can not be just space!!!
-    </p>
+    </p> -->
     <p *ngIf="warningMode === 'add'">
       Add new successfully!!!
     </p>
@@ -199,12 +201,12 @@
           (click)="isWarningmOpen = false"
           *ngIf="warningMode === 'add'" (click)="onCloseClickReload()" >Ok</button>
       <div class="confirm-actions">
-      <button class="btn-cancel" 
+      <!-- <button class="btn-cancel" 
           (click)="isWarningmOpen = false"
           *ngIf="warningMode === 'title-blank-trim'"  >Ok</button>
       <button class="btn-cancel" 
           (click)="isWarningmOpen = false"
-          *ngIf="warningMode === 'title-blank-notrim'"  >Ok</button>
+          *ngIf="warningMode === 'title-blank-notrim'"  >Ok</button> -->
       <button class="btn-cancel" 
           (click)="isWarningmOpen = false"
           *ngIf="warningMode === 'delete'" (click)="onCloseClick();" >Ok</button>

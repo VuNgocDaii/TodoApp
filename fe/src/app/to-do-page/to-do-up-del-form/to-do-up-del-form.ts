@@ -48,8 +48,14 @@ export class ToDoUpDelForm {
   
   @Output() reloadList = new EventEmitter<void>();
   updateTask(titleInput: string,descInput:string,statusSelect: string, prioritySelect:string) {
+    this.onChangeTitle(titleInput);
+    if (titleInput === '') {
+      // this.isWarningmOpen=true;
+      return;
+    }
     titleInput = titleInput.trim();
     descInput = descInput.trim();
+
     const curTask: Task ={
       taskId: this.task.taskId,
       title: titleInput,
@@ -60,10 +66,10 @@ export class ToDoUpDelForm {
       updateAt: new Date(),
       isDeleted: this.task.isDeleted
     } ;
-    
+   
     console.log(titleInput);
     if (titleInput === '') {
-      this.isWarningmOpen=true;
+      // this.isWarningmOpen=true;
       return;
     }
     console.log(curTask.title);
@@ -79,17 +85,19 @@ export class ToDoUpDelForm {
     this.reloadList.emit();
   }
   addNewTask( newTitle: string,newDescription: string, newStatus: string, newPriority:string){
+    
+    this.onChangeTitle(newTitle);
     if (newTitle === '') {
-      this.openWarning('title-blank-notrim');
+      // this.openWarning('title-blank-notrim');
     
       return;
     }
     newTitle = newTitle.trim();
-    this.isWarningmOpen=true;
+    // this.isWarningmOpen=true;
     newDescription = newDescription.trim();
     console.log(newTitle);
     if (newTitle === '') {
-      this.openWarning('title-blank-trim');
+      // this.openWarning('title-blank-trim');
     
       return;
     } 
@@ -130,5 +138,15 @@ export class ToDoUpDelForm {
     console.log(mode);
     this.isWarningmOpen = true;
     this.warningMode = mode;
+  }
+  inputState: string = 'normal';
+  onChangeTitle(input: string){
+    this.inputState = 'normal';
+    if (input==='') this.inputState = 'empty';
+    else {
+    input = input.trim();
+    if (input==='') this.inputState = 'only-space'
+    }
+    console.log(this.inputState);
   }
 }
