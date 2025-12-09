@@ -45,17 +45,21 @@ export class ToDoList implements OnInit, OnChanges {
 
       case 'priority-asc':
         this.tasks.sort((a, b) => {
-          const pa = priorityOrder[a.priority] ?? 0;
-          const pb = priorityOrder[b.priority] ?? 0;
+          let pa = 0;
+          if (a.priority) pa = priorityOrder[a.priority];
+          let pb = 0;
+          if (b.priority) pb = priorityOrder[b.priority];
           return pa - pb;  
         });
         break;
 
       case 'priority-desc':
         this.tasks.sort((a, b) => {
-          const pa = priorityOrder[a.priority] ?? 0;
-          const pb = priorityOrder[b.priority] ?? 0;
-          return pb - pa;
+          let pa = 0;
+          if (a.priority) pa = priorityOrder[a.priority];
+          let pb = 0;
+          if (b.priority) pb = priorityOrder[b.priority];
+          return pb - pa; 
         });
         break;
       case 'none':{ this.tasks=this.taskService.searchAndFilter(this.curUrl,this.filter.searchStr, this.filter.statusFilter , this.filter.priorityFilter);
@@ -72,14 +76,22 @@ export class ToDoList implements OnInit, OnChanges {
   
   ngOnChanges() {
     if (this.curUrl==='/deletedTasksPage') this.tasks = this.taskService.load(true);
-    else 
-      this.tasks = this.taskService.load(false);
+    else this.tasks = this.taskService.load(false);
     console.log('change ...');
-    this.tasks = this.taskService.searchAndFilter(this.curUrl,this.filter.searchStr ?? '', this.filter.statusFilter ?? [], this.filter.priorityFilter ?? []);
+    this.tasks = this.taskService.searchAndFilter(this.curUrl,this.filter.searchStr, this.filter.statusFilter, this.filter.priorityFilter);
+    this.sortOption = this.curSortTitle;
+    this.sort();
+    this.sortOption = this.curSortPrio;
+    this.sort();
     // if (this.callReload > 0) console.log(this.callReload);
     if (this.callReload > 0) {
       if (this.curUrl==='/deletedTasksPage') this.tasks = this.taskService.load(true);
       else this.tasks = this.taskService.load(false);
+      this.tasks = this.taskService.searchAndFilter(this.curUrl,this.filter.searchStr, this.filter.statusFilter, this.filter.priorityFilter);
+      this.sortOption = this.curSortTitle;
+    this.sort();
+    this.sortOption = this.curSortPrio;
+    this.sort();
       // this.tasks= this.taskService.load();
       this.callReload=0;
     }

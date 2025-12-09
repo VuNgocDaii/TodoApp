@@ -47,18 +47,20 @@ export class TaskService {
   }
   add(newTitle: string, newDescription: string, newStatus: string, newPriority: string) {
     const newTaskId = this.genNewId();
-    const taskList = this.loadFull();
-    const newTask : Task = {
-        taskId : newTaskId,
-        title : newTitle,
-        description : newDescription,
-        status : newStatus,
-        priority : newPriority,
-        createAt : new Date().toISOString(),
-        updateAt : new Date().toISOString(),
-        isDeleted : false
-    };
+    let taskList = this.loadFull();
+    taskList = taskList.reverse();
+    const newTask = new Task(
+        newTaskId,
+        newTitle,
+        newDescription,
+        newStatus,
+         newPriority
+        // createAt : new Date().toISOString(),
+        // updateAt : new Date().toISOString(),
+        // isDeleted : false
+    );
     taskList.push(newTask);
+    taskList = taskList.reverse();
     localStorage.setItem(STORAGE_TASK,JSON.stringify(taskList));
   }
   delete(currentTaskId?: number) {
@@ -83,10 +85,10 @@ export class TaskService {
             taskList = taskList.filter(task => task.title.toLowerCase().includes(lowerCaseSearchTerm));
         }
           if (statusFilter !== undefined && statusFilter !== null && statusFilter.length!=0) 
-              taskList = taskList.filter(task => statusFilter.includes(task.status));
+              taskList = taskList.filter(task => (task.status && statusFilter.includes(task.status)));
         
         if (prorityFilter !== undefined && prorityFilter !== null && prorityFilter.length!=0) 
-            taskList = taskList.filter(task => prorityFilter.includes(task.priority));
+            taskList = taskList.filter(task =>(task.priority && prorityFilter.includes(task.priority)));
         
         return taskList;
     }
@@ -95,7 +97,7 @@ export class TaskService {
         const index = taskList.findIndex(t => t.taskId === updatedTask.taskId);
 
         if (index>-1) {
-            updatedTask.updateAt = new Date().toISOString();
+            updatedTask.updateAt = new Date();
             taskList[index] = updatedTask;
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
         } 
@@ -107,7 +109,7 @@ export class TaskService {
 
         if (task) {
             task.status = 'Done';
-            task.updateAt = new Date().toISOString();
+            task.updateAt = new Date();
             
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
             this.update(task);
@@ -120,7 +122,7 @@ export class TaskService {
 
         if (task) {
             task.status = 'Pending';
-            task.updateAt = new Date().toISOString();
+            task.updateAt = new Date();
             
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
             this.update(task);

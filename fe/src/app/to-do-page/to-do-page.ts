@@ -45,4 +45,9 @@ export class ToDoPage {
   onChangeForm(value: any){
     this.curFormTitle = value;
   }
+  triggerFilterChange: number = 0;
+  onTriggerAllFilter(){
+    this.triggerFilterChange +=1;
+    console.log(this.triggerFilterChange);
+  }
 }

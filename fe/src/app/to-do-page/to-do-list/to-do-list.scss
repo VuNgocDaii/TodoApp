@@ -18,6 +18,10 @@
 
 .head-container {
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 10px;
 }
 
 .tasks-list {
@@ -211,3 +215,5 @@
   transform: translateY(0);
   box-shadow: none;
 }
+
+

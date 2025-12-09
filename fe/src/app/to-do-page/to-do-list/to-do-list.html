@@ -1,7 +1,7 @@
 <main class="main">
 <div class="main-content-container">
     <div class="tasks-list-container">
-        <div class="head-container" style="margin:10px 0px;">
+        <div class="head-container" >
             <div class="head-top">
      @if (curUrl === '/') {<h2>To Do List</h2>}
   @else {<h2>Deleted Tasks List</h2>}
@@ -11,13 +11,13 @@
         <label for="sortSelect">Sort by:</label>
         <select id="sortSelect" (change)="onChangeSortTitle($event,(0))">
             <option value="none">None</option>
-            <option value="title-asc">Title ↑</option>
-            <option value="title-desc">Title ↓</option>
+            <option value="title-asc">Title (A->Z)</option>
+            <option value="title-desc">Title (Z->A)</option>
         </select>
          <select id="sortSelect" (change)="onChangeSortPrio($event,(0))">
             <option value="none">None</option>
-            <option value="priority-asc">Priority ↑</option>
-            <option value="priority-desc">Priority ↓</option>
+            <option value="priority-asc">Priority (Low->High)</option>
+            <option value="priority-desc">Priority (High->Low)</option>
         </select>
         </div>
         @if (curUrl==='/'){

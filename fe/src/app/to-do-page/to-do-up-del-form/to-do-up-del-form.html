@@ -121,8 +121,9 @@
               titleInput.value,
               descriptionInput.value,
               statusSelect.value,
-              prioritySelect.value
-          )" class="btn-save">
+              prioritySelect.value)" 
+              
+              class="btn-save">
       Save changes
     </button>
   </div>
@@ -134,8 +135,8 @@
               titleInput.value,
               descriptionInput.value,
               statusSelect.value,
-              prioritySelect.value
-          )" class="btn-save">
+              prioritySelect.value)" 
+              class="btn-save">
       Save
     </button>
   </div>
@@ -163,18 +164,50 @@
       </button>
     </div>
   </div>
-
-
 </div>
+
 <div class="warning-overlay" *ngIf="isWarningmOpen">
   <div class="confirm-box">
-    <p>
-      Task title can not be blank!!!
+    <p *ngIf="warningMode === 'title-blank-notrim'">
+      Task title can not be empty!!!
+    </p>
+    <p *ngIf="warningMode === 'title-blank-trim'">
+      Task title can not be just space!!!
+    </p>
+    <p *ngIf="warningMode === 'add'">
+      Add new successfully!!!
+    </p>
+    <p *ngIf="warningMode === 'edit'">
+      Edit task successfully!!!
+    </p>
+    <p *ngIf="warningMode === 'restore'">
+      Restore task successfully!!!
+    </p>
+    <p *ngIf="warningMode === 'delete'">
+      Delete task successfully!!!
     </p>
 
+  <div class="confirm-actions">
+    <button class="btn-cancel" 
+          (click)="isWarningmOpen = false"
+          *ngIf="warningMode === 'edit'" (click)="onCloseClick()" >Ok</button>
+    <button class="btn-cancel" 
+          (click)="isWarningmOpen = false"
+          *ngIf="warningMode === 'restore'" (click)="onCloseClick()" >Ok</button>
 
-    <div class="confirm-actions">
-      <button class="btn-cancel" (click)="isWarningmOpen = false">Ok</button>
+      <button class="btn-cancel" 
+          (click)="isWarningmOpen = false"
+          *ngIf="warningMode === 'add'" (click)="onCloseClickReload()" >Ok</button>
+      <div class="confirm-actions">
+      <button class="btn-cancel" 
+          (click)="isWarningmOpen = false"
+          *ngIf="warningMode === 'title-blank-trim'"  >Ok</button>
+      <button class="btn-cancel" 
+          (click)="isWarningmOpen = false"
+          *ngIf="warningMode === 'title-blank-notrim'"  >Ok</button>
+      <button class="btn-cancel" 
+          (click)="isWarningmOpen = false"
+          *ngIf="warningMode === 'delete'" (click)="onCloseClick();" >Ok</button>
     </div>
   </div>
 </div>

@@ -1,6 +1,9 @@
 <!-- <h1>lmao</h1> -->
 <main class="main">
-    <app-side-bar (filterChange)="onChangeFilter($event)" class="side-bar" ></app-side-bar>
+    <app-side-bar 
+            (filterChange)="onChangeFilter($event)" 
+            [triggerFilter]="triggerFilterChange"
+            class="side-bar" ></app-side-bar>
     
     <app-to-do-list 
     [filter]="curFilter" 
@@ -16,6 +19,7 @@
     [formTitle]="curFormTitle"
     (closeForm)="onCloseForm($event)"
      (reloadList)="onReloadList()"
+     (triggerAllFilter)="onTriggerAllFilter()"
      ></app-to-do-up-del-form>
     }
     @if (curFormTitle==='Task Detail' && curTask){

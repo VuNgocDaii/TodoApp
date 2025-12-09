@@ -16,8 +16,8 @@ export class ToDoUpDelForm {
     title:'',
     description:'',
     status:'',
-    createAt:'',
-    updateAt:'',
+    createAt:new Date(),
+    updateAt:new Date(),
     priority:'',
     isDeleted:false
   };
@@ -25,12 +25,18 @@ export class ToDoUpDelForm {
   curUrl: string = '';
   @Input() formTitle : string = '';
   @Output() closeForm = new EventEmitter<void>();
+  @Output() triggerAllFilter = new EventEmitter<void>();
   constructor(private taskService: TaskService, private router:Router) { }
   ngOnInit(){
     this.curUrl = this.router.url;
   }
   onCloseClick() {
     this.closeForm.emit();
+  }
+  onCloseClickReload() {
+    console.log("F5");
+    window.location.reload(); 
+
   }
   ngOnChanges(){
      if (this.checkReload>0) {
@@ -51,7 +57,7 @@ export class ToDoUpDelForm {
       status: statusSelect,
       priority: prioritySelect,
       createAt: this.task.createAt,
-      updateAt: new Date().toISOString(),
+      updateAt: new Date(),
       isDeleted: this.task.isDeleted
     } ;
     
@@ -63,6 +69,7 @@ export class ToDoUpDelForm {
     console.log(curTask.title);
     this.taskService.update(curTask);
     this.task = this.taskService.loadTask(this.task.taskId);
+    this.openWarning('edit');
     this.reloadList.emit();
   }
   isWarningmOpen = false;
@@ -71,15 +78,25 @@ export class ToDoUpDelForm {
     // console.log(curTask?.isDeleted+"xoa");
     this.reloadList.emit();
   }
-  addNewTask(newTitle: string,newDescription: string, newStatus: string, newPriority:string){
+  addNewTask( newTitle: string,newDescription: string, newStatus: string, newPriority:string){
+    if (newTitle === '') {
+      this.openWarning('title-blank-notrim');
+    
+      return;
+    }
     newTitle = newTitle.trim();
+    this.isWarningmOpen=true;
     newDescription = newDescription.trim();
     console.log(newTitle);
     if (newTitle === '') {
-      this.isWarningmOpen=true;
+      this.openWarning('title-blank-trim');
+    
       return;
-    }
+    } 
     this.taskService.add(newTitle, newDescription, newStatus,newPriority);
+    this.openWarning('add');
+    this.triggerAllFilter.emit();
+   
     this.reloadList.emit();
   }
   restoreTask(curTask? : Task){
@@ -89,8 +106,8 @@ export class ToDoUpDelForm {
 
   isConfirmOpen = false;
   confirmMode: string = '';
-
-  openConfirm(mode: 'delete' | 'restore') {
+  warningMode: string = '';
+  openConfirm(mode: string) {
     this.confirmMode = mode;
     this.isConfirmOpen = true;
     console.log(mode);
@@ -99,14 +116,19 @@ export class ToDoUpDelForm {
   confirmDelete() {
     this.deleteTask(this.task);
     this.isConfirmOpen = false;
-    this.onCloseClick();
+    this.openWarning('delete');
+    // this.onCloseClick();
   }
 
   confirmRestore() {
     this.restoreTask(this.task);
     this.isConfirmOpen = false;
-    this.onCloseClick();
+    this.openWarning('restore');
   }
 
-
+  openWarning(mode: string) {
+    console.log(mode);
+    this.isWarningmOpen = true;
+    this.warningMode = mode;
+  }
 }

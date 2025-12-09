@@ -5,7 +5,7 @@
       🏠︎ Home Page
     </a>
   
-    <div class="search-container">
+    <div class="search-container" #searchGroup>
       <input type="text"
              [(ngModel)]="searchStr"
              (input)="onChangeSearchStr($event.target.value)"
@@ -31,7 +31,7 @@
           <input type="checkbox"
                  class="status-item"
                  (change)="onChangeStatus($event, 'Pending')"
-                 (change)="toggleAllOfStatus($event)"
+                 (change)="toggleAllOfStatus()"
                  value="Pending">
           Pending
         </label>
@@ -40,7 +40,7 @@
           <input type="checkbox"
                  class="status-item"
                  (change)="onChangeStatus($event, 'Done')"
-                 (change)="toggleAllOfStatus($event)"
+                 (change)="toggleAllOfStatus()"
                  value="Done">
           Done
         </label>
@@ -66,7 +66,7 @@
           <input type="checkbox"
                  class="priority-item"
                  (change)="onChangePriority($event, 'High')"
-                 (change)="toggleAllOfPrio($event)"
+                 (change)="toggleAllOfPrio()"
                  value="High">
           High
         </label>
@@ -75,7 +75,7 @@
           <input type="checkbox"
                  class="priority-item"
                  (change)="onChangePriority($event, 'Medium')"
-                 (change)="toggleAllOfPrio($event)"
+                 (change)="toggleAllOfPrio()"
                  value="Medium">
           Medium
         </label>
@@ -84,7 +84,7 @@
           <input type="checkbox"
                  class="priority-item"
                  (change)="onChangePriority($event, 'Low')"
-                 (change)="toggleAllOfPrio($event)"
+                 (change)="toggleAllOfPrio()"
                  value="Low">
           Low
         </label>

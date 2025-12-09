@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {Router} from '@angular/router'
 import { NgIf } from '@angular/common';
@@ -11,6 +11,7 @@ import { NgIf } from '@angular/common';
 })
 export class SideBar {
   @Output() filterChange = new EventEmitter<any>();
+  @Input() triggerFilter:any;
   @ViewChild('statusGroup', { static: false }) statusGroup!: ElementRef<HTMLDivElement>;
   @ViewChild('priorityGroup', { static: false }) priorityGroup!: ElementRef<HTMLDivElement>;
   constructor(private router:Router) {}
@@ -19,6 +20,7 @@ export class SideBar {
     this.curUrl = this.router.url;
     console.log(this.curUrl);
   }
+  
   searchStr: string = '';
   statusFilter: string[] = [];
   priorityFilter: string[] = [];
@@ -30,10 +32,11 @@ export class SideBar {
       priorityFilter: this.priorityFilter
     });
   }
-
+  
   onChangeSearchStr(value: string) {
     this.searchStr = value;
     this.emitFilter();
+    this.triggerFilter = 0;
   }
 
   onChangeStatus(event: Event, value: string) {
@@ -43,7 +46,7 @@ export class SideBar {
     } else {
       this.statusFilter = this.statusFilter.filter(s => s !== value);
     }
-
+    this.triggerFilter = 0;
     this.emitFilter();
   }
 
@@ -54,7 +57,7 @@ export class SideBar {
     } else {
       this.priorityFilter = this.priorityFilter.filter(s => s !== value);
     }
-
+    this.triggerFilter = 0;
     this.emitFilter();
   }
 
@@ -68,6 +71,7 @@ export class SideBar {
         c.dispatchEvent(new Event('change', { bubbles: true}));
       }
     });
+    this.triggerFilter = 0;
   }
 
   toggleAllPriority(event: Event) {
@@ -80,9 +84,10 @@ export class SideBar {
         c.dispatchEvent(new Event('change', { bubbles: true}));
       }
     });
+    this.triggerFilter = 0;
   }
 
-  toggleAllOfPrio(event: Event) {
+  toggleAllOfPrio() {
     let count: number=0;
     const items = this.priorityGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.priority-item');
     const allPrio = this.priorityGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.priority-all-item');
@@ -91,16 +96,17 @@ export class SideBar {
         count++;
       }
     });
-    console.log(count);
+    // console.log(count);
     allPrio.forEach(c => {
       if (c.value === 'All') {
         if (count === 3) c.checked = true;
         else c.checked = false;
       }
     });
+    this.triggerFilter = 0;
   }
 
-  toggleAllOfStatus(event: Event) {
+  toggleAllOfStatus() {
     let count: number=0;
     const items = this.statusGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.status-item');
     const allStatusBtn = this.statusGroup.nativeElement.querySelectorAll<HTMLInputElement>('input.status-all-item');
@@ -116,5 +122,6 @@ export class SideBar {
         else c.checked = false;
       }
     });
+    this.triggerFilter = 0;
   }
 }
