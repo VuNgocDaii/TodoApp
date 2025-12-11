@@ -3,6 +3,7 @@
     <app-side-bar 
             (filterChange)="onChangeFilter($event)" 
             [triggerFilter]="triggerFilterChange"
+            (reloadList)="onReloadList()"
             class="side-bar" ></app-side-bar>
     
     <app-to-do-list 
@@ -16,7 +17,7 @@
 
     @if (curFormTitle==='Add New Task'){
     <app-to-do-up-del-form class="form" 
-    [formTitle]="curFormTitle"
+    [formTitle]="curFormTitle"]
     (closeForm)="onCloseForm($event)"
      (reloadList)="onReloadList()"
      (triggerAllFilter)="onTriggerAllFilter()"

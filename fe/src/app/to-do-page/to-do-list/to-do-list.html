@@ -1,80 +1,162 @@
 <main class="main">
-<div class="main-content-container">
-    <div class="tasks-list-container">
-        <div class="head-container" >
-            <div class="head-top">
-     @if (curUrl === '/') {<h2>To Do List</h2>}
-  @else {<h2>Deleted Tasks List</h2>}
+    <div class="main-content-container">
+        <div class="tasks-list-container">
+            <div class="head-container">
+                <div class="head-top" style="margin-bottom: 10px;background-color: white;">
+                    @if (curUrl.includes('/taskList') || curUrl ==='/') {<h2>To Do List</h2>}
+                    @else {<h2>Deleted Tasks List</h2>}
 
-    <div class="head-actions">
-        <div class="sort-container">
-        <label for="sortSelect">Sort by:</label>
-        <select id="sortSelect" (change)="onChangeSortTitle($event,(0))">
-            <option value="none">None</option>
-            <option value="title-asc">Title (A->Z)</option>
-            <option value="title-desc">Title (Z->A)</option>
-        </select>
-         <select id="sortSelect" (change)="onChangeSortPrio($event,(0))">
-            <option value="none">None</option>
-            <option value="priority-asc">Priority (Low->High)</option>
-            <option value="priority-desc">Priority (High->Low)</option>
-        </select>
-        </div>
-        @if (curUrl==='/'){
-            <button class="btn-add-task" (click)="emitNewFormTitle('Add New Task')">
-            + Add New Task
-            </button>
-        }
-    </div>
-    </div>
+                    <div class="head-actions">
+                        <div class="filter-select-wrapper">
+                            <label class="filter-label">Status:</label>
+
+                            <div class="filter-select" (click)="toggleStatusDropdown($event)">
+                                <span>{{ getStatusLabel() }}</span>
+                                <span class="arrow">▼</span>
+                            </div>
+
+                            <div class="dropdown-panel" *ngIf="showStatusDropdown">
+                                <label class="dropdown-item">
+                                    <input type="checkbox" [checked]="statusAllChecked"
+                                        (change)="onStatusChange('All', $event)">
+                                    All
+                                </label>
+
+                                <label class="dropdown-item">
+                                    <input type="checkbox" [checked]="filter.statusFilter.includes('Pending')"
+                                        (change)="onStatusChange('Pending', $event)">
+                                    Pending
+                                </label>
+
+                                <label class="dropdown-item">
+                                    <input type="checkbox" [checked]="filter.statusFilter.includes('Done')"
+                                        (change)="onStatusChange('Done', $event)">
+                                    Done
+                                </label>
+                            </div>
+                        </div>
+                        <div class="filter-select-wrapper">
+                            <label class="filter-label">Priority:</label>
+
+                            <div class="filter-select" (click)="togglePriorityDropdown($event)">
+                                <span>{{ getPriorityLabel() }}</span>
+                                <span class="arrow">▼</span>
+                            </div>
+
+                            <div class="dropdown-panel" *ngIf="showPriorityDropdown">
+                                <label class="dropdown-item">
+                                    <input type="checkbox" [checked]="priorityAllChecked"
+                                        (change)="onPriorityChange('All', $event)">
+                                    All
+                                </label>
+
+                                <label class="dropdown-item">
+                                    <input type="checkbox" [checked]="filter.priorityFilter.includes('High')"
+                                        (change)="onPriorityChange('High', $event)">
+                                    High
+                                </label>
+
+                                <label class="dropdown-item">
+                                    <input type="checkbox" [checked]="filter.priorityFilter.includes('Medium')"
+                                        (change)="onPriorityChange('Medium', $event)">
+                                    Medium
+                                </label>
+
+                                <label class="dropdown-item">
+                                    <input type="checkbox" [checked]="filter.priorityFilter.includes('Low')"
+                                        (change)="onPriorityChange('Low', $event)">
+                                    Low
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-time-container" #priorityGroup>
+                            <label class="txtTimeFilter">Time: </label>
+                            <select (change)="onChangeTimeFilter($event)">
+                                <option value="all">All</option>
+                                <option value="today">Today</option>
+                                <option value="last-week">Last Week</option>
+                                <option value="from-to">From - To</option>
+                            </select>
 
 
-            <!-- <ul class="tasks-list" style="padding: 10px 0px;">
+                        </div>
+                        <div class="from-to-picker" *ngIf="timeFilter === 'from-to'">
+                            <label>From:</label>
+                            <input type="date" [(ngModel)]="fromDate" (change)="onDateChange()">
+
+                            <label>To:</label>
+                            <input type="date" [(ngModel)]="toDate" (change)="onDateChange()">
+                        </div>
+                        <div class="sort-container">
+                            <label for="sortSelect">Sort by:</label>
+                            <select id="sortSelect" (change)="onChangeSortTitle($event,(0))">
+                                <option value="none">None</option>
+                                <option value="title-asc">Title (A->Z)</option>
+                                <option value="title-desc">Title (Z->A)</option>
+                            </select>
+                            <select id="sortSelect" (change)="onChangeSortPrio($event,(0))">
+                                <option value="none">None</option>
+                                <option value="priority-asc">Priority (Low->High)</option>
+                                <option value="priority-desc">Priority (High->Low)</option>
+                            </select>
+                        </div>
+                        @if (curUrl.includes('/taskList') || curUrl==='/'){
+                        <button class="btn-add-task" (click)="emitNewFormTitle('Add New Task')">
+                            + Add New Task
+                        </button>
+                        }
+                    </div>
+                </div>
+
+
+                <!-- <ul class="tasks-list" style="padding: 10px 0px;">
                 <li class="task">
                     Add New Task
                 </li>
             </ul> -->
-        </div>
+            </div>
 
-        <ul class="tasks-list tasks-list-scroll">
-            <li *ngFor="let t of tasks" class="task">
-                <label class="task-card">
+            <ul class="tasks-list tasks-list-scroll">
+                <li *ngFor="let t of tasks" class="task">
+                    <label class="task-card">
 
-             @if (curUrl==='/'){
-                <input type="checkbox"
-                        class="task-checkbox"
-                        [checked]="t.status === 'Done'"
-                        (change)="toggleStatus(t)" />
-                }
-                <div class="task-content">
-                    <div class="task-title">{{ t.title }}</div>
+                        @if (curUrl.includes('/taskList') || curUrl ==='/'){
+                        <input type="checkbox" class="task-checkbox" [checked]="t.status === 'Done'"
+                            (change)="toggleStatus(t)" />
+                        } @else {
+                        <div></div>
+                        }
+                        <div class="task-content">
+                            <div class="task-title">{{ t.title }}</div>
 
-                    <div class="task-sub">
-                    Status:
-                    <span [ngClass]="{ 
+                            <div class="task-sub">
+                                Status:
+                                <span [ngClass]="{ 
                         'status-done': t.status === 'Done',
                         'status-pending': t.status === 'Pending'
                     }">
-                        {{ t.status }}
-                    </span>
+                                    {{ t.status }}
+                                </span>
 
-                    · Priority:
-                    <span class="priority-pill"
-                        [ngClass]="{
+                                · Priority:
+                                <span class="priority-pill" [ngClass]="{
                             'priority-high': t.priority === 'High',
                             'priority-medium': t.priority === 'Medium',
                             'priority-low': t.priority === 'Low'
                         }">
-                        {{ t.priority }}
-                    </span>
-                    </div>
-                </div>
+                                    {{ t.priority }}
+                                </span>
+                            </div>
+                        </div>
+                        <div>{{t.createAt | date:'dd/MM/yyyy'}}</div>
+                        <button class="task-chevron" (click)="emitChoosenTask(t)"
+                            (click)="emitNewFormTitle('Task Detail')">></button>
+                    </label>
+                </li>
+            </ul>
+        </div>
 
-                <button class="task-chevron" (click)="emitChoosenTask(t)" (click)="emitNewFormTitle('Task Detail')">></button>
-                </label>
-            </li>
-        </ul>
     </div>
-
-</div>
+    
 </main>

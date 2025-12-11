@@ -6,7 +6,7 @@
     </button>
   </div>
 
-  @if (curUrl === '/deletedTasksPage') {
+  @if (curUrl.includes('/deletedTasksPage')) {
   <div class="task-form-body">
 
     <div class="field">
@@ -20,6 +20,13 @@
       <label>Description:</label>
       <div class="readonly-field">
         {{ task.description }}
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Status:</label>
+      <div class="readonly-field">
+         {{categoryNameReadonly}}
       </div>
     </div>
 
@@ -74,7 +81,18 @@
       <label>Description:</label>
       <input #descriptionInput type="text" class="txt-description" [value]="task.description || ''" />
     </div>
-
+     <div class="field">
+      <label>Task Group:</label>
+      <select #catSelect class="txt-status">
+        <option [ngValue]="0">
+          None
+        </option>
+        <option *ngFor="let c of cats" [value]="c.categoryId" [selected]="c.categoryId === task.categoryId">
+          {{c.categoryName}}
+        </option>
+    
+      </select>
+    </div>
     <div class="field">
       <label>Status:</label>
       <select #statusSelect class="txt-status">
@@ -113,7 +131,7 @@
     }
   </div>
 
-  @if (formTitle === 'Task Detail' && curUrl === '/') {
+  @if (formTitle === 'Task Detail') {
   <div class="task-form-footer">
     <button type="button" (click)="openConfirm('delete')" class="btn-delete">
       Delete Task
@@ -123,7 +141,8 @@
               titleInput.value,
               descriptionInput.value,
               statusSelect.value,
-              prioritySelect.value)" 
+              prioritySelect.value,
+              catSelect.value)" 
               
               class="btn-save">
       Save changes
@@ -137,7 +156,8 @@
               titleInput.value,
               descriptionInput.value,
               statusSelect.value,
-              prioritySelect.value)" 
+              prioritySelect.value,
+              catSelect.value)" 
               class="btn-save">
       Save
     </button>

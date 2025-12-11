@@ -21,10 +21,10 @@ export class ToDoPage {
     console.log(this.curFilter.searchStr);
   }
 
-  curTask? : Task;
+  curTask = new Task(0,'','','','',0);
   onChangeTask(value: any) {
     this.curTask = value;
-    console.log(this.curTask?.title);
+    console.log(this.curTask.title);
   }
 
   onCloseForm(value: any) {
@@ -34,7 +34,7 @@ export class ToDoPage {
   }
   checkChange: number = 0;
   onReloadList() {
-    // console.log("????");
+     console.log("????");
      this.checkChange+=1;
   }
   onReloadForm() {
@@ -49,5 +49,9 @@ export class ToDoPage {
   onTriggerAllFilter(){
     this.triggerFilterChange +=1;
     console.log(this.triggerFilterChange);
+  }
+  openCatForm:boolean = false;
+  onChangeOpenCatForm(){
+    this.openCatForm = true;
   }
 }

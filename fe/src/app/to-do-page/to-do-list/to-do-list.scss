@@ -20,7 +20,8 @@
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  background: white;
+  z-index: 1000;
+  // background: white;
   padding: 10px;
 }
 
@@ -111,7 +112,7 @@
 .task-checkbox {
   width: 16px;
   height: 16px;
-  accent-color: #facc15; 
+  accent-color: #69BF64; 
 }
 
 .task-content {
@@ -216,4 +217,80 @@
   box-shadow: none;
 }
 
+.filter-time-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
+.filter-time-container select {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.from-to-picker {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  
+}
+.from-to-picker input[type="date"] {
+  padding: 4px 6px;
+   border-radius: 4px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+
+}
+
+.filter-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.filter-select {
+  min-width: 130px;
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.arrow {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: 110%;
+  left: 70px; 
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 10px 12px;
+  width: 150px;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  cursor: pointer;
+}

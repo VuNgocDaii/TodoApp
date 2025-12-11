@@ -14,12 +14,12 @@ export class TaskService {
     localStorage.setItem(STORAGE_ID,String(newId+1));
     return newId;
   }
-  load(type: boolean) : Task[] {
+  load(type: boolean,catId: number) : Task[] {
     const json = localStorage.getItem(STORAGE_TASK);
     if (!json) return [];
     try {
       let tasks = JSON.parse(json) as Task[];
-      tasks = tasks.filter(task => task.isDeleted===type);
+      tasks = tasks.filter(task => task.isDeleted===type && task.categoryId === catId);
       // for (let task of tasks)
       //   console.log(task.taskId);
       return tasks;
@@ -27,12 +27,40 @@ export class TaskService {
       return [];
     }
   }
-  loadTask(currentTaskId: number): any {
-        let taskList = this.loadFull();
+  loadTask(currentTaskId: number,catId: number): any {
+        let taskList = this.loadFullCat();
         const task = taskList.find(t => t.taskId === currentTaskId);
         return task;
       }
-  loadFull() : Task[] {
+  loadFull(catId: number) : Task[] {
+    const json = localStorage.getItem(STORAGE_TASK);
+    if (!json) return [];
+    try {
+      let tasks = JSON.parse(json) as Task[];
+      tasks = tasks.filter(task => task.categoryId === catId);
+      // tasks = tasks.filter(task => task.isDeleted===false);
+      // for (let task of tasks)
+      //   console.log(task.taskId);
+      return tasks;
+    } catch {
+      return [];
+    }
+  }
+  loadFullCatType(state: boolean) : Task[] {
+    const json = localStorage.getItem(STORAGE_TASK);
+    if (!json) return [];
+    try {
+      let tasks = JSON.parse(json) as Task[];
+      tasks = tasks.filter(t=>t.isDeleted===state);
+      // tasks = tasks.filter(task => task.isDeleted===false);
+      // for (let task of tasks)
+      //   console.log(task.taskId);
+      return tasks;
+    } catch {
+      return [];
+    }
+  }
+  loadFullCat() : Task[] {
     const json = localStorage.getItem(STORAGE_TASK);
     if (!json) return [];
     try {
@@ -45,41 +73,47 @@ export class TaskService {
       return [];
     }
   }
-  add(newTitle: string, newDescription: string, newStatus: string, newPriority: string) {
+  add(newTitle: string, newDescription: string, newStatus: string, newPriority: string,catId: number) {
     const newTaskId = this.genNewId();
-    let taskList = this.loadFull();
+    let taskList = this.loadFullCat();
     taskList = taskList.reverse();
     const newTask = new Task(
         newTaskId,
         newTitle,
         newDescription,
         newStatus,
-         newPriority
+         newPriority,
         // createAt : new Date().toISOString(),
         // updateAt : new Date().toISOString(),
         // isDeleted : false
+        catId
     );
     taskList.push(newTask);
     taskList = taskList.reverse();
     localStorage.setItem(STORAGE_TASK,JSON.stringify(taskList));
   }
-  delete(currentTaskId?: number) {
-        let taskList = this.loadFull();
+  delete(currentTaskId?: number, catId?: number) {
+       
+        let taskList = this.loadFullCat();
         for (let task of taskList)
         console.log(task.taskId);
         const index = taskList.findIndex(t => t.taskId === currentTaskId);
         if (index>-1) {
+            taskList[index].updateAt = new Date();
             taskList[index].isDeleted = true;
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
             for (let task of taskList)
-           console.log(task.taskId);
+           console.log(task.taskId+ ' ' + task.categoryId + ' ' + task.isDeleted);
         } 
     
   }
-  searchAndFilter(curUrl?:string,searchString?: string, statusFilter?: string[],prorityFilter?: string[]): Task[] {
+  searchAndFilter(curUrl?:string,searchString?: string, statusFilter?: string[],prorityFilter?: string[],catId?: number): Task[] {
+        if (!catId) catId=0;
         let taskList ;
-          if (curUrl==='/deletedTasksPage') taskList = this.load(true);
-        else taskList = this.load(false);
+        if (curUrl?.includes('/deletedTasksPage')) taskList = this.load(true,catId);
+        else taskList = this.load(false,catId);
+        if (curUrl === '/') taskList = this.loadFullCatType(false);
+        if (curUrl === '/deletedTasksPage/0') taskList = this.loadFullCatType(true);
         if (searchString) {
             const lowerCaseSearchTerm = searchString.toLowerCase().trim();
             taskList = taskList.filter(task => task.title.toLowerCase().includes(lowerCaseSearchTerm));
@@ -89,12 +123,12 @@ export class TaskService {
         
         if (prorityFilter !== undefined && prorityFilter !== null && prorityFilter.length!=0) 
             taskList = taskList.filter(task =>(task.priority && prorityFilter.includes(task.priority)));
-        
+        //  for (let t of taskList) console.log(t.taskId+' '+t.title);
         return taskList;
     }
-    update(updatedTask: Task): void {
-        let taskList = this.loadFull();
-        const index = taskList.findIndex(t => t.taskId === updatedTask.taskId);
+    update(updatedTask: Task,catId: number): void {
+        let taskList = this.loadFullCat();
+        const index = taskList.findIndex(t => t.taskId === updatedTask.taskId );
 
         if (index>-1) {
             updatedTask.updateAt = new Date();
@@ -103,33 +137,33 @@ export class TaskService {
         } 
     }
 
-    markDone(currentTaskId: number): void {
-        let taskList = this.loadFull();
-        const task = taskList.find(t => t.taskId === currentTaskId);
+    markDone(currentTaskId: number, catId: number): void {
+        let taskList = this.loadFullCat();
+        const task = taskList.find(t => t.taskId === currentTaskId && t.categoryId ===catId);
 
         if (task) {
             task.status = 'Done';
             task.updateAt = new Date();
             
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
-            this.update(task);
+            this.update(task,catId);
         }
     }
 
-    unmarkDone(currentTaskId: number): void {
-        let taskList = this.loadFull();
-        const task = taskList.find(t => t.taskId === currentTaskId);
+    unmarkDone(currentTaskId: number, catId: number): void {
+        let taskList = this.loadFullCat();
+        const task = taskList.find(t => t.taskId === currentTaskId && t.categoryId === catId);
 
         if (task) {
             task.status = 'Pending';
             task.updateAt = new Date();
             
             localStorage.setItem(STORAGE_TASK, JSON.stringify(taskList));
-            this.update(task);
+            this.update(task,catId);
         } 
     }
-     restore(currentTaskId?: number) {
-        let taskList = this.loadFull();
+     restore(currentTaskId?: number, catId?: number) {
+        let taskList = this.loadFullCat();
         for (let task of taskList)
         console.log(task.taskId);
         const index = taskList.findIndex(t => t.taskId === currentTaskId);
@@ -139,5 +173,5 @@ export class TaskService {
             for (let task of taskList)
            console.log(task.taskId);
         } 
-  }
+    }
 }

@@ -1,24 +1,35 @@
 import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {Router} from '@angular/router'
-import { NgIf } from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router'
+import { Category } from '../../model/category.model';
+import { CategoryService } from '../../service/category-service';
+import { CommonModule, NgIf } from '@angular/common';
+import { Task } from '../../model/task.model';
+import { TaskService } from '../../service/task-service';
 @Component({
   selector: 'app-side-bar',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule,CommonModule],
   templateUrl: './side-bar.html',
   styleUrl: './side-bar.scss',
 })
 export class SideBar {
+  cats?: Category[];
   @Output() filterChange = new EventEmitter<any>();
   @Input() triggerFilter:any;
   @ViewChild('statusGroup', { static: false }) statusGroup!: ElementRef<HTMLDivElement>;
   @ViewChild('priorityGroup', { static: false }) priorityGroup!: ElementRef<HTMLDivElement>;
-  constructor(private router:Router) {}
+  constructor(private taskService:TaskService,private categoryService:CategoryService,private router:Router,private  route: ActivatedRoute) {}
   curUrl: string = '';
+  categoryId: number = 0;
   ngOnInit(){
     this.curUrl = this.router.url;
     console.log(this.curUrl);
+    this.route.paramMap.subscribe(params => {
+      this.categoryId = Number(params.get('categoryId'));
+      // console.log("Category ID nhận được:", this.categoryId);
+    });
+    this.cats = this.categoryService.load(false);
   }
   
   searchStr: string = '';
@@ -123,5 +134,93 @@ export class SideBar {
       }
     });
     this.triggerFilter = 0;
+  }
+  goToTaskListPage(categoryId: number){
+    this.router.navigate(['/taskList',categoryId]);
+    this.reloadList.emit();
+    console.log("???");
+  }
+  @Output() reloadList = new EventEmitter<void>();
+  goToDeletedTasksPage(categoryId: number){
+    this.router.navigate(['/deletedTasksPage',categoryId]);
+    this.reloadList.emit();
+    console.log("???");
+  }
+  goBack(){
+    this.router.navigate(['/']);
+    this.reloadList.emit();
+
+  }
+  openedMenuId: number | null = null;
+
+toggleMenu(categoryId: number, event: MouseEvent) {
+  event.stopPropagation();
+  this.openedMenuId = this.openedMenuId === categoryId ? null : categoryId;
+}
+  curContentForm = '';
+  curTaskGroup? = new Category(-1,"Task Group's Title");
+  onDeleteCategory(c: Category) {
+    this.openDelCat=true;
+    this.curTaskGroup = c;
+    console.log('delete gr ' + this.openDelCat+' '+c.categoryName);
+  }
+  openAddCat:boolean = false;
+  updateTaskGroup(cat:Category,input:string) {
+    cat.categoryName = input;
+    this.categoryService.update(cat);
+  }
+  onOpenAddCat(formTitle: string,cat?: Category) {
+    console.log('CatForm');
+    this.curContentForm = formTitle;
+    this.openAddCat = true;
+    
+    if (cat?.categoryId !== undefined) this.curTaskGroup = cat;
+    // console.log(this.curTaskGroup?.categoryId+' '+this.curTaskGroup?.categoryName);
+  }
+  onCancelClick() {
+    this.openAddCat = false;
+    this.curTaskGroup = new Category(-1,"Task Group's Title");
+  }
+  onCloseClickReload(input: string) {
+    console.log(this.inputState+' '+this.openAddCat);
+    if(!input) input='';
+    console.log(input);
+    this.changeInputState(input);
+    console.log(this.inputState+' '+this.openAddCat);
+
+    if (this.inputState !== 'ok') {return;}
+    console.log(this.inputState);
+    if (this.curContentForm === 'Add New Task Group') this.categoryService.add(input);
+    else if (this.curTaskGroup) this.updateTaskGroup(this.curTaskGroup,input);
+    this.openAddCat = false;
+    console.log("F5");
+    window.location.reload();
+
+  }
+
+  inputState: string='';
+  changeInputState(input: string){
+    if (input==='') {this.inputState = 'empty';return}
+    input = input.trim();
+    if (input==='') {this.inputState = 'only-space';return}
+    this.inputState='ok';
+  }
+  openDelCat:boolean = false;
+  onCancelDelClick() {
+    this.openDelCat = false;
+  }
+  onCloseClickDelReload(cat?:Category) {
+     this.categoryService.delete(cat?.categoryId); 
+    let taskList = this.taskService.loadFullCat();
+    for (let t of taskList) 
+      if (t.categoryId === cat?.categoryId) {
+         this.taskService.delete(t.taskId);
+        console.log(t.title);
+      }
+    this.openAddCat = false;
+    console.log("F5 "+this.curTaskGroup?.isDeleted);
+    this.goBack();
+      if (this.curUrl=='/') window.location.reload();
+
   }
 }

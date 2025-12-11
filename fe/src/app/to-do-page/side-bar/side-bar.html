@@ -1,19 +1,98 @@
 <main class="main">
   <div class="content-container">
-    <a href="http://localhost:4200/" 
-      style="text-align: center;text-decoration: none;color: black;font-size: 25px;">
+    <a href="http://localhost:4200/"
+      style="text-align: center;text-decoration: none;color: black;font-size: 25px;margin-bottom: 24px;">
       🏠︎ Home Page
     </a>
-  
-    <div class="search-container" #searchGroup>
-      <input type="text"
-             [(ngModel)]="searchStr"
-             (input)="onChangeSearchStr($event.target.value)"
-             class="search-input"
-             placeholder="Search by title">
+
+    <div class="search-container" #searchGroup style="margin-bottom: 20px;">
+      <input type="text" [(ngModel)]="searchStr" (input)="onChangeSearchStr($event.target.value)" class="search-input"
+        placeholder="Search by title">
+    </div>
+    <div class="category-container-head" style="margin-bottom: 0px;">
+      <ul class="tasks-list tasks-list-scroll">
+        <li class="task">
+          <div class="task-card">
+            <div class="task-content" (click)="onOpenAddCat('Add New Task Group')">
+              <div class="task-title" style="cursor: pointer;">+ Add New Task Group</div>
+            </div>
+          </div>
+        </li>
+        @if(curUrl==='/') {
+        <li class="task">
+          <div class="task-card" style=" background: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+            <div class="task-content">
+              <div class="task-title">All</div>
+            </div>
+          </div>
+        </li>
+        }
+        @else {
+        <li class="task">
+          <div class="task-card" (click)="goBack()">
+            <div class="task-content">
+              <div class="task-title">All</div>
+            </div>
+          </div>
+        </li>
+        }
+      </ul>
     </div>
 
-    <div class="filter-container" #statusGroup>
+    <div class="category-container" style="margin-top: 0px;">
+      <ul class="tasks-list tasks-list-scroll">
+        <li *ngFor="let c of cats" class="task">
+            @if (categoryId === c.categoryId) {
+               <div class="task-row">
+            <div class="task-card" style="background: #f9fafb; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+              <div class="task-content" (click)="goToTaskListPage(c.categoryId)"
+                style="display: flex;justify-content: space-between;align-items: center;">
+                <div class="task-title">{{ c.categoryName }}</div>
+                
+
+              </div>
+              <div class="more-wrapper">
+                  <button class="more-btn" (click)="toggleMenu(c.categoryId, $event)">
+                    ⋯
+                  </button>
+
+                  <div class="more-menu" *ngIf="openedMenuId === c.categoryId">
+                    <button type="button" (click)="onOpenAddCat('Edit Task Group',c)">Edit</button>
+                    <button type="button" (click)="onDeleteCategory(c)">Delete</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+            }
+            @else {
+              <div class="task-row">
+            <div class="task-card" >
+              <div class="task-content" (click)="goToTaskListPage(c.categoryId)"
+                style="display: flex;justify-content: space-between;align-items: center;">
+                <div class="task-title">{{ c.categoryName }}</div>
+                
+
+              </div>
+              <div class="more-wrapper">
+                  <button class="more-btn" (click)="toggleMenu(c.categoryId, $event)">
+                    ⋯
+                  </button>
+
+                  <div class="more-menu" *ngIf="openedMenuId === c.categoryId">
+                    <button type="button" (click)="onOpenAddCat('Edit Task Group',c)">Edit</button>
+                    <button type="button" (click)="onDeleteCategory(c)">Delete</button>
+                  </div>
+                </div>
+            </div>
+            </div>
+            }
+
+        </li>
+
+      </ul>
+    </div>
+    <!-- <div class="filter-container" #statusGroup>
       <div class="txtFilter">Status</div>
       <hr/>
       <div class="filter-options">
@@ -89,12 +168,39 @@
           Low
         </label>
       </div>
+    </div> -->
+
+    @if (curUrl.includes('/taskList') || curUrl==='/'){
+    <!-- <a href="http://localhost:4200/" class="btn-back-tasks">Back</a> -->
+    <a (click)="goToDeletedTasksPage(categoryId)" class="btn-deleted-tasks">🗑 Deleted Tasks</a>
+    }
+    @if (curUrl.includes('/deletedTasksPage')) {
+    <a (click)="goBack()" class="btn-deleted-tasks">Back</a>
+    }
+  </div>
+  <div class="add-cate-overlay" *ngIf="openAddCat">
+
+    <div class="confirm-box">
+      <div style="text-align: left;">{{curContentForm}}</div>
+      <input #titleInput type="text" class="input-box" ((change))="changeInputState(titleInput.value)"
+        placeholder="{{curTaskGroup?.categoryName}}" />
+      <div style="font-size: 10px;color: red;margin-bottom: 10px;" *ngIf="inputState==='empty'">Task title can not be
+        empty</div>
+      <div style="font-size: 10px;color: red;margin-bottom: 10px;" *ngIf="inputState==='only-space'">Task title can not
+        be just space</div>
+
+      <button class="btn-cancel" (click)="onCancelClick()">Cancel</button>
+      <button class="btn-ok" (click)="onCloseClickReload(titleInput.value)">Save</button>
+
     </div>
-    @if (curUrl === '/'){
-    <a href="http://localhost:4200/deletedTasksPage" class="btn-deleted-tasks">🗑 Deleted Tasks</a>
-    }
-    @else {
-      <a href="http://localhost:4200/" class="btn-deleted-tasks">Back</a>
-    }
+  </div>
+  <div class="add-cate-overlay" *ngIf="openDelCat">
+
+    <div class="confirm-box">
+      <div style="text-align: center;margin-bottom:20px;margin-top:10px;">Delete this task group?</div>
+      <button class="btn-cancel" (click)="onCancelDelClick()">Cancel</button>
+      <button class="btn-ok" (click)="onCloseClickDelReload(curTaskGroup)">Yes, Delete</button>
+
+    </div>
   </div>
 </main>

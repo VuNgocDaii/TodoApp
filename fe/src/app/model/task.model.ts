@@ -6,10 +6,11 @@ export class Task {
     description? : string;
     status? : string;
     priority? : string;
-    createAt? : Date;
+    createAt : Date;
     updateAt? : Date;
     isDeleted? : boolean;
-    constructor(newTaskId: number, newTitle: string, newDescription:string, newStatus: string, newPriority: string) {
+    categoryId: number;
+    constructor(newTaskId: number, newTitle: string, newDescription:string, newStatus: string, newPriority: string,newCategoryId: number) {
        this.taskId = newTaskId;
        this.title = newTitle;
        this.description = newDescription;
@@ -18,5 +19,6 @@ export class Task {
        this.createAt = new Date();
        this.updateAt = new Date();
        this.isDeleted = false;
+       this.categoryId = newCategoryId;
     }
 }
