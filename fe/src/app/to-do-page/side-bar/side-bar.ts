@@ -29,13 +29,37 @@ export class SideBar {
       this.categoryId = Number(params.get('categoryId'));
       // console.log("Category ID nhận được:", this.categoryId);
     });
-    this.cats = this.categoryService.load(false);
+    if (this.curUrl.includes('/taskList') || this.curUrl==='/') this.cats = this.categoryService.load(false);
+    else this.cats = this.categoryService.loadFull();
   }
-  
+  openResCat: boolean = false;
   searchStr: string = '';
   statusFilter: string[] = [];
   priorityFilter: string[] = [];
+  curResTaskGroup = new Category(-1,'');
+  onOpenResCat(title: String, c: Category){
+    this.curResTaskGroup = c;
+    this.openResCat = true;
+  }
 
+  onCancelResClick() {
+    this.openResCat = false;
+  }
+
+  onCloseClickResReload(cat?:Category) {
+    this.categoryService.restore(cat?.categoryId); 
+    let taskList = this.taskService.loadFullCat();
+    for (let t of taskList) 
+      if (t.categoryId === cat?.categoryId) {
+         this.taskService.restore(t.taskId);
+        console.log(t.title);
+      }
+    this.openAddCat = false;
+    console.log("F5 "+this.curTaskGroup?.isDeleted);
+    this.goBack();
+      if (this.curUrl=='/') window.location.reload();
+
+  }
   private emitFilter() {
     this.filterChange.emit({
       searchStr: this.searchStr,
@@ -45,9 +69,29 @@ export class SideBar {
   }
   
   onChangeSearchStr(value: string) {
-    this.searchStr = value;
-    this.emitFilter();
-    this.triggerFilter = 0;
+    console.log('searchcate ' + value);
+    value= value.trim();
+    console.log(this.curUrl);
+      this.route.paramMap.subscribe(params => {
+        this.categoryId = Number(params.get('categoryId'));
+        // console.log("Category ID nhận được:", this.categoryId);
+      });
+      if (this.curUrl.includes('/taskList') || this.curUrl==='/') this.cats = this.categoryService.load(false);
+      else this.cats = this.categoryService.loadFull();
+    this.cats=this.categoryService.searchAndFilter(this.cats,value);
+
+    if (value === '') {
+    this.curUrl = this.router.url;
+      console.log(this.curUrl);
+      this.route.paramMap.subscribe(params => {
+        this.categoryId = Number(params.get('categoryId'));
+        // console.log("Category ID nhận được:", this.categoryId);
+      });
+      if (this.curUrl.includes('/taskList') || this.curUrl==='/') this.cats = this.categoryService.load(false);
+      else this.cats = this.categoryService.loadFull();
+    }
+    // this.emitFilter();
+    // this.triggerFilter = 0;
   }
 
   onChangeStatus(event: Event, value: string) {
@@ -136,7 +180,12 @@ export class SideBar {
     this.triggerFilter = 0;
   }
   goToTaskListPage(categoryId: number){
-    this.router.navigate(['/taskList',categoryId]);
+    
+    if (this.curUrl.includes('/taskList') || this.curUrl==='/') {
+      if (categoryId!==0) this.router.navigate(['/taskList',categoryId]);
+      else this.router.navigate(['/']);
+    }
+    else this.goToDeletedTasksPage(categoryId);
     this.reloadList.emit();
     console.log("???");
   }
@@ -158,7 +207,7 @@ toggleMenu(categoryId: number, event: MouseEvent) {
   this.openedMenuId = this.openedMenuId === categoryId ? null : categoryId;
 }
   curContentForm = '';
-  curTaskGroup? = new Category(-1,"Task Group's Title");
+  curTaskGroup? = new Category(-1,"");
   onDeleteCategory(c: Category) {
     this.openDelCat=true;
     this.curTaskGroup = c;
@@ -179,7 +228,7 @@ toggleMenu(categoryId: number, event: MouseEvent) {
   }
   onCancelClick() {
     this.openAddCat = false;
-    this.curTaskGroup = new Category(-1,"Task Group's Title");
+    this.curTaskGroup = new Category(-1,"");
   }
   onCloseClickReload(input: string) {
     console.log(this.inputState+' '+this.openAddCat);

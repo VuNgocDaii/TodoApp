@@ -1,12 +1,19 @@
-<main class="main">
-    <div class="main-content-container">
-        <div class="tasks-list-container">
-            <div class="head-container">
-                <div class="head-top" style="margin-bottom: 10px;background-color: white;">
+<main class="main" style="background-color: white;">
+    <div class="main-content-container" style="background-color:white;">
+        <div class="tasks-list-container" style="background-color:white;">
+            <div class="head-container" style="padding: 10px;background-color: white;">
+                <div class="head-top">
                     @if (curUrl.includes('/taskList') || curUrl ==='/') {<h2>To Do List</h2>}
                     @else {<h2>Deleted Tasks List</h2>}
 
                     <div class="head-actions">
+                        <!-- Search box -->
+                        <div class="search-container" #searchGroup>
+                            <label class="filter-label">Search:</label>
+                            <input type="text" #titleInput class="search-input" placeholder="Search by Task's title"
+                                (input)="onSearchStr(titleInput.value)" />
+                        </div>
+
                         <div class="filter-select-wrapper">
                             <label class="filter-label">Status:</label>
 
@@ -35,6 +42,7 @@
                                 </label>
                             </div>
                         </div>
+
                         <div class="filter-select-wrapper">
                             <label class="filter-label">Priority:</label>
 
@@ -78,9 +86,8 @@
                                 <option value="last-week">Last Week</option>
                                 <option value="from-to">From - To</option>
                             </select>
-
-
                         </div>
+
                         <div class="from-to-picker" *ngIf="timeFilter === 'from-to'">
                             <label>From:</label>
                             <input type="date" [(ngModel)]="fromDate" (change)="onDateChange()">
@@ -88,6 +95,7 @@
                             <label>To:</label>
                             <input type="date" [(ngModel)]="toDate" (change)="onDateChange()">
                         </div>
+
                         <div class="sort-container">
                             <label for="sortSelect">Sort by:</label>
                             <select id="sortSelect" (change)="onChangeSortTitle($event,(0))">
@@ -101,12 +109,14 @@
                                 <option value="priority-desc">Priority (High->Low)</option>
                             </select>
                         </div>
+
                         @if (curUrl.includes('/taskList') || curUrl==='/'){
                         <button class="btn-add-task" (click)="emitNewFormTitle('Add New Task')">
                             + Add New Task
                         </button>
                         }
                     </div>
+
                 </div>
 
 
@@ -117,7 +127,12 @@
             </ul> -->
             </div>
 
-            <ul class="tasks-list tasks-list-scroll">
+            @if (tasks.length===0) {
+            <div
+                style="display: flex;align-items: center;text-align: center;justify-content: center;height: 100vh; background-color: white;">
+                No
+                Task</div>}
+            <ul class="tasks-list tasks-list-scroll" style="background-color:white;">
                 <li *ngFor="let t of tasks" class="task">
                     <label class="task-card">
 
@@ -131,7 +146,11 @@
                             <div class="task-title">{{ t.title }}</div>
 
                             <div class="task-sub">
-                                Status:
+                                Group:
+                                <span class="" >
+                                    {{getCategoryName(t.categoryId)}}
+                                </span>
+                                · Status:
                                 <span [ngClass]="{ 
                         'status-done': t.status === 'Done',
                         'status-pending': t.status === 'Pending'
@@ -158,5 +177,5 @@
         </div>
 
     </div>
-    
+
 </main>

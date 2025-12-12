@@ -6,8 +6,8 @@
     </a>
 
     <div class="search-container" #searchGroup style="margin-bottom: 20px;">
-      <input type="text" [(ngModel)]="searchStr" (input)="onChangeSearchStr($event.target.value)" class="search-input"
-        placeholder="Search by title">
+      <input type="text" (input)="onChangeSearchStr($event.target.value)" class="search-input"
+        placeholder="Search by Task Group's title">
     </div>
     <div class="category-container-head" style="margin-bottom: 0px;">
       <ul class="tasks-list tasks-list-scroll">
@@ -30,7 +30,7 @@
         }
         @else {
         <li class="task">
-          <div class="task-card" (click)="goBack()">
+          <div class="task-card" (click)="goToTaskListPage(0)">
             <div class="task-content">
               <div class="task-title">All</div>
             </div>
@@ -48,8 +48,10 @@
             <div class="task-card" style="background: #f9fafb; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
               <div class="task-content" (click)="goToTaskListPage(c.categoryId)"
                 style="display: flex;justify-content: space-between;align-items: center;">
+                @if (c.isDeleted === false) {
                 <div class="task-title">{{ c.categoryName }}</div>
-                
+                } 
+                @else {<div class="task-title">{{ c.categoryName }} (Deleted)</div>}
 
               </div>
               <div class="more-wrapper">
@@ -58,8 +60,16 @@
                   </button>
 
                   <div class="more-menu" *ngIf="openedMenuId === c.categoryId">
+                    @if (c.isDeleted === false) {
                     <button type="button" (click)="onOpenAddCat('Edit Task Group',c)">Edit</button>
+                    }
+
+                    @if (c.isDeleted === false) {
                     <button type="button" (click)="onDeleteCategory(c)">Delete</button>
+                    }
+                    @else {
+                      <button type="button" (click)="onOpenResCat('Res Task Group',c)">Restore</button>
+                    }
                   </div>
                 </div>
             </div>
@@ -70,7 +80,11 @@
             <div class="task-card" >
               <div class="task-content" (click)="goToTaskListPage(c.categoryId)"
                 style="display: flex;justify-content: space-between;align-items: center;">
+                @if (c.isDeleted === false) {
                 <div class="task-title">{{ c.categoryName }}</div>
+                } 
+                @else {<div class="task-title">{{ c.categoryName }} (Deleted)</div>}
+
                 
 
               </div>
@@ -80,8 +94,17 @@
                   </button>
 
                   <div class="more-menu" *ngIf="openedMenuId === c.categoryId">
+                    @if (c.isDeleted === false) {
                     <button type="button" (click)="onOpenAddCat('Edit Task Group',c)">Edit</button>
+                    }
+
+                    @if (c.isDeleted === false) {
                     <button type="button" (click)="onDeleteCategory(c)">Delete</button>
+                    }
+                    @else {
+                      <button type="button" (click)="onOpenResCat('Res Task Group',c)">Restore</button>
+                    }
+                    
                   </div>
                 </div>
             </div>
@@ -183,7 +206,7 @@
     <div class="confirm-box">
       <div style="text-align: left;">{{curContentForm}}</div>
       <input #titleInput type="text" class="input-box" ((change))="changeInputState(titleInput.value)"
-        placeholder="{{curTaskGroup?.categoryName}}" />
+        [value]="curTaskGroup?.categoryName" />
       <div style="font-size: 10px;color: red;margin-bottom: 10px;" *ngIf="inputState==='empty'">Task title can not be
         empty</div>
       <div style="font-size: 10px;color: red;margin-bottom: 10px;" *ngIf="inputState==='only-space'">Task title can not
@@ -194,12 +217,23 @@
 
     </div>
   </div>
+
   <div class="add-cate-overlay" *ngIf="openDelCat">
 
     <div class="confirm-box">
       <div style="text-align: center;margin-bottom:20px;margin-top:10px;">Delete this task group?</div>
       <button class="btn-cancel" (click)="onCancelDelClick()">Cancel</button>
       <button class="btn-ok" (click)="onCloseClickDelReload(curTaskGroup)">Yes, Delete</button>
+
+    </div>
+  </div>
+
+  <div class="add-cate-overlay" *ngIf="openResCat">
+
+    <div class="confirm-box">
+      <div style="text-align: center;margin-bottom:20px;margin-top:10px;">Restore this task group?</div>
+      <button class="btn-cancel" (click)="onCancelResClick()">Cancel</button>
+      <button class="btn-ok" (click)="onCloseClickResReload(curResTaskGroup)">Yes, Restore</button>
 
     </div>
   </div>

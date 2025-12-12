@@ -1,6 +1,6 @@
 .main {
   display: flex;
-  padding: 10px;
+ 
   
   justify-content: right;
   height: 100vh;
@@ -293,4 +293,18 @@
   gap: 6px;
   padding: 4px 0;
   cursor: pointer;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.search-input {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  min-width: 220px;
 }

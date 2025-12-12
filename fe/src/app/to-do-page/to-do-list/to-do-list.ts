@@ -91,22 +91,39 @@ export class ToDoList implements OnInit, OnChanges {
   @Output() taskChange = new EventEmitter<any>();
   @Input() callReload: number = 0;
   @Output() formTitleChange = new EventEmitter<any>();
+   onSearchStr(title: string) {
+      this.filter.searchStr = title;
+      console.log('changestr '+ this.filter.searchStr);
+        this.tasks = this.taskService.searchAndFilter(this.curUrl, this.filter.searchStr, this.filter.statusFilter, this.filter.priorityFilter, this.categoryId);
 
+    this.sortOption = this.curSortTitle;
+    this.sort();
+    this.sortOption = this.curSortPrio;
+    this.sort();
+
+    this.applyTimeFilter();
+    }
+     getCategoryName(catId: Number):any {
+      let catsList = this.categoryService.loadFull();
+      for (let cat of catsList)
+        if (cat.categoryId === catId) return cat.categoryName;
+      return 'None';
+    }
   ngOnChanges() {
+    this.curUrl = this.router.url;
     if (this.openAddCat) console.log("vung oi mo cua ra");
     else console.log("vung oi mo cua ");
     this.route.paramMap.subscribe(params => {
       this.categoryId = Number(params.get('categoryId'));
       // console.log(this.categoryId);
     })
-    
-    if (!this.categoryId) this.categoryId = 0;
+   
     if (this.curUrl.includes('/deletedTasksPage')) this.tasks = this.taskService.load(true, this.categoryId);
     else this.tasks = this.taskService.load(false, this.categoryId);
     if (this.curUrl === '/') this.tasks = this.taskService.loadFullCatType(false);
     if (this.curUrl === '/deletedTasksPage/0') this.tasks = this.taskService.loadFullCatType(true);
 
-    console.log('change ...');
+    console.log('change ...' + this.curUrl);
     this.tasks = this.taskService.searchAndFilter(this.curUrl, this.filter.searchStr, this.filter.statusFilter, this.filter.priorityFilter, this.categoryId);
 
     this.sortOption = this.curSortTitle;

@@ -98,11 +98,10 @@ export class CategoryService {
     }
   }
 
-  searchAndFilter(curUrl?: string, searchString?: string): Category[] {
-    let taskList: Category[];
-    if (curUrl?.includes('/deletedTaskGroupsPage')) taskList = this.load(true);
-    else taskList = this.load(false);
-
+  searchAndFilter(cats?:Category[], searchString?: string): Category[] {
+    let taskList = cats;
+    if (taskList === undefined) return [];
+    searchString = searchString?.trim();
     if (searchString) {
       const lowerCaseSearchTerm = searchString.toLowerCase().trim();
       taskList = taskList.filter(task =>
